@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -43,7 +44,7 @@ fun TextFieldWithDropdown(
     }
     Box(
         modifier
-            .background(LightWhite)
+            .background(Color.Transparent)
     ) {
         TextField(
             modifier = Modifier
@@ -56,9 +57,15 @@ fun TextFieldWithDropdown(
             value = value,
             onValueChange = setValue,
             label = { Text(text = label, color = Color.White) },
-            colors = TextFieldDefaults.textFieldColors(textColor = Color.White),
-            trailingIcon = trailingIcon,
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.White,
+                disabledTextColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            trailingIcon = trailingIcon
         )
         DropdownMenu(
             expanded = dropDownExpanded,
