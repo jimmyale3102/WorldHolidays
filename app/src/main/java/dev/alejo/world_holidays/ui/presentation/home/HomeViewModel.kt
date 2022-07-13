@@ -1,7 +1,6 @@
 package dev.alejo.world_holidays.ui.presentation.home
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
