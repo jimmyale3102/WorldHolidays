@@ -13,15 +13,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     @Singleton
     @Provides
-    fun provideRetrofit() = Retrofit.Builder()
+    fun provideRetrofit(): Retrofit = Retrofit.Builder()
         .baseUrl(Constants.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     @Singleton
     @Provides
-    fun provideHolidayApiClient(retrofit: Retrofit) = retrofit.create(HolidayApiClient::class.java)
+    fun provideHolidayApiClient(retrofit: Retrofit): HolidayApiClient =
+        retrofit.create(HolidayApiClient::class.java)
 }
