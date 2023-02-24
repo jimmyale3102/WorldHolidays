@@ -13,13 +13,13 @@ class HolidayRepositoryImpl @Inject constructor(
     private val dao: HolidayNotificationDao
 ) : HolidayRepository, HolidayNotificationRepository {
 
-    override suspend fun getHolidaysByYear(countryCode: Int, year: String): List<HolidayModel> =
+    override suspend fun getHolidaysByYear(countryCode: String, year: String): List<HolidayModel> =
         service.getHolidaysByYear(countryCode, year)
 
-    override suspend fun getNextPublicHoliday(countryCode: Int): List<HolidayModel> =
+    override suspend fun getNextPublicHoliday(countryCode: String): List<HolidayModel> =
         service.getNextPublicHoliday(countryCode)
 
-    override suspend fun getTodayHoliday(countryCode: Int): Int =
+    override suspend fun getTodayHoliday(countryCode: String): Int =
         service.getTodayHoliday(countryCode)
 
     override suspend fun getHolidayNotification(holidayNotificationId: Int): HolidayNotificationItem? =
