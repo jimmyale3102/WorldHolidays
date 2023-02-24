@@ -7,6 +7,6 @@ import javax.inject.Inject
 class GetNextPublicHolidayUserCase @Inject constructor(
     private val repository: HolidayRepository
 ) {
-    suspend operator fun invoke(countryCode: Int): List<HolidayModel> =
+    suspend operator fun invoke(countryCode: String): List<HolidayModel> =
         repository.getNextPublicHoliday(countryCode)
 }

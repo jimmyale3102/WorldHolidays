@@ -7,6 +7,6 @@ import javax.inject.Inject
 class GetHolidayUseCase @Inject constructor(
     private val repository: HolidayRepository
 ) {
-    suspend operator fun invoke(countryCode: Int, year: String): List<HolidayModel> =
+    suspend operator fun invoke(countryCode: String, year: String): List<HolidayModel> =
         repository.getHolidaysByYear(countryCode, year)
 }

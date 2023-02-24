@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetTodayHolidayUseCase @Inject constructor(
     private val repository: HolidayRepository
 ) {
-    suspend operator fun invoke(countryCode: Int): Int = repository.getTodayHoliday(countryCode)
+    suspend operator fun invoke(countryCode: String): Int = repository.getTodayHoliday(countryCode)
 }
