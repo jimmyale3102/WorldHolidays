@@ -1,7 +1,6 @@
 package dev.alejo.world_holidays.ui.presentation.home
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.alejo.world_holidays.R
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_200
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_204
+import dev.alejo.world_holidays.core.Constants.Companion.COLOMBIA_CODE
 import dev.alejo.world_holidays.core.DateUtils
 import dev.alejo.world_holidays.data.model.HolidayModel
 import dev.alejo.world_holidays.domain.GetHolidayUseCase
@@ -45,7 +45,7 @@ class HomeViewModel @Inject constructor(
     private fun getTodayHoliday(context: Context) {
         viewModelScope.launch {
             isTodayHolidayLoading.postValue(true)
-            getTodayHolidayUseCase().let { responseCode ->
+            getTodayHolidayUseCase(COLOMBIA_CODE).let { responseCode ->
                 isTodayHolidayLoading.postValue(false)
                 if(responseCode != CODE_200) {
                     todayHolidayResponse.postValue(
@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
 
     fun getNextHolidayByYear() {
         viewModelScope.launch {
-            val result = getNextPublicHolidayUseCase()
+            val result = getNextPublicHolidayUseCase(COLOMBIA_CODE)
             if(result.isNotEmpty())
                 nextPublicHolidayResponse.postValue(
                     if(getTodayHolidayName(result).isEmpty()) result[0] else result[1]
@@ -74,7 +74,7 @@ class HomeViewModel @Inject constructor(
     fun getHolidayByYear(year: String) {
         viewModelScope.launch {
             isGetHolidayByYearLoading.postValue(true)
-            val result = getHolidayUseCase(year)
+            val result = getHolidayUseCase(COLOMBIA_CODE, year)
             if(result.isNotEmpty()) {
                 holidayByYearResponse.postValue(result)
                 val todayHolidayName = getTodayHolidayName(result)

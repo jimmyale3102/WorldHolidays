@@ -135,7 +135,7 @@ fun DefaultPreview() {
 
 
 
-val all = listOf("aaa", "baa", "aab", "abb", "bab")
+val all = listOf("aaa", "baa", "aab", "abb", "bab", "bbbbb")
 
 val dropDownOptions = mutableStateOf(listOf<String>())
 val textFieldValue = mutableStateOf(TextFieldValue())

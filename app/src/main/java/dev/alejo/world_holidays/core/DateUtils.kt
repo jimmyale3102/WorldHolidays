@@ -11,7 +11,7 @@ object DateUtils {
     private val nextHolidayDateFormat = SimpleDateFormat("EEE, MMM dd")
 
     fun getStringDateFromDate(date: Date): String = dateFormatter.format(date)
-    fun getDateFromString(dateString: String): Date? = dateFormatter.parse(dateString)
+    private fun getDateFromString(dateString: String): Date? = dateFormatter.parse(dateString)
     fun getDayFromDate(date: Date): String = dateFormat.format(date).split(" ")[1]
     fun getDayNameFromDate(date: Date): String = dateFormat.format(date).split(" ")[0]
     fun getMonthNumber(dateString: String): Int = dateString.split("-")[1].toInt()

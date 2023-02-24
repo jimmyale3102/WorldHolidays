@@ -1,11 +1,12 @@
 package dev.alejo.world_holidays.domain
 
-import dev.alejo.world_holidays.data.HolidayRepository
 import dev.alejo.world_holidays.data.model.HolidayModel
+import dev.alejo.world_holidays.data.repositories.HolidayRepository
 import javax.inject.Inject
 
 class GetNextPublicHolidayUserCase @Inject constructor(
     private val repository: HolidayRepository
 ) {
-    suspend operator fun invoke(): List<HolidayModel> = repository.getNextPublicHoliday()
+    suspend operator fun invoke(countryCode: String): List<HolidayModel> =
+        repository.getNextPublicHoliday(countryCode)
 }
