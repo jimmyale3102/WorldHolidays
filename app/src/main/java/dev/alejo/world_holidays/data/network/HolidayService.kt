@@ -9,23 +9,23 @@ class HolidayService @Inject constructor(
     private val api: HolidayApiClient
 ) {
 
-    suspend fun getHolidaysByYear(year: String): List<HolidayModel> {
+    suspend fun getHolidaysByYear(countryCode: Int, year: String): List<HolidayModel> {
         return withContext(Dispatchers.IO) {
-            val response = api.getHolidaysByYear(year)
+            val response = api.getHolidaysByYear(countryCode, year)
             response.body() ?: emptyList()
         }
     }
 
-    suspend fun getNextPublicaHoliday(): List<HolidayModel> {
+    suspend fun getNextPublicHoliday(countryCode: Int): List<HolidayModel> {
         return withContext(Dispatchers.IO) {
-            val response = api.getNextPublicHoliday()
+            val response = api.getNextPublicHoliday(countryCode)
             response.body() ?: emptyList()
         }
     }
 
-    suspend fun getTodayHoliday(): Int {
+    suspend fun getTodayHoliday(countryCode: Int): Int {
         return withContext(Dispatchers.IO) {
-            val response = api.getTodayHoliday()
+            val response = api.getTodayHoliday(countryCode)
             response.code()
         }
     }
