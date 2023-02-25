@@ -1,13 +1,18 @@
 buildscript {
     ext {
-        compose_version = '1.2.0-alpha05'
+        core_version = "1.9.0"
+        compose_version = "1.2.0-alpha05"
+        activity_version = "1.6.1"
+        lifecycle_version = "2.5.1"
         kotlin_version = "1.6.10"
+        retrofit_version = "2.9.0"
+        coroutines_version = "1.6.1"
         hilt_version = "2.41"
-        room_version = "2.4.2"
+        room_version = "2.5.0"
         google_services_version = "4.3.14"
         crashlytics_version = "2.9.0"
     }
-}// Top-level build file where you can add configuration options common to all sub-projects/modules.
+}
 plugins {
     id 'com.android.application' version '7.4.0' apply false
     id 'com.android.library' version '7.4.0' apply false
