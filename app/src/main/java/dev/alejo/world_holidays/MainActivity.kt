@@ -14,13 +14,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import dagger.hilt.android.AndroidEntryPoint
 import dev.alejo.world_holidays.ui.presentation.home.HomeViewModel
 import dev.alejo.world_holidays.ui.presentation.home.components.TextFieldWithDropdown
@@ -44,7 +51,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = PrimaryGreen
+                    color = BlueLight
                 ) {
                     val viewModel: HomeViewModel by viewModels()
                     viewModel.onCreate(this)
@@ -54,28 +61,17 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    private fun onDropdownDismissRequest() {
-        dropDownExpanded.value = false
-    }
-
-    private fun onValueChanged(value: TextFieldValue) {
-        dropDownExpanded.value = true
-        textFieldValue.value = value
-        dropDownOptions.value = all.filter { it.startsWith(value.text) && it != value.text }.take(3)
-    }
-
 }
 
 @Composable
 fun HolidayBody() {
-    Box(
-        Modifier
-            .fillMaxSize()
-            .padding(Medium)
-    ) {
+    Box(Modifier.fillMaxSize()) {
+        HomeBackground()
+
         Column(
-            Modifier.fillMaxWidth()
+            Modifier
+                .fillMaxWidth()
+                .padding(Medium)
         ) {
             IconButton(
                 modifier = Modifier
@@ -86,11 +82,12 @@ fun HolidayBody() {
                 Icon(
                     Icons.Default.Info,
                     contentDescription = "",
-                    tint = PrimaryGreen
+                    tint = Color.White
                 )
             }
-            Spacer(Modifier.height(Large))
+            Spacer(Modifier.height(Medium))
             TextFieldWithDropdown(
+                modifier = Modifier.padding(horizontal = Small),
                 value = textFieldValue.value,
                 setValue = ::onValueChanged,
                 onDismissRequest = ::onDropdownDismissRequest,
@@ -119,15 +116,44 @@ fun HolidayBody() {
     }
 }
 
+@Composable
+private fun HomeBackground() {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Black,
+                        BlueLight
+                    ),
+                    startY = 0F,
+                    endY = 600F
+                )
+            )
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data("https://github.com/jimmyale3102/World-Holidays-Assets/blob/master/7.jpg?raw=true")
+                .crossfade(true)
+                .build(),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.3F)
+        )
+    }
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
     WorldHolidaysTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = PrimaryGreen
+            color = BlueLight
         ) {
-
             HolidayBody()
         }
     }

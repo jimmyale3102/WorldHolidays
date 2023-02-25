@@ -19,7 +19,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
+import dev.alejo.world_holidays.ui.theme.BlueDark
 import dev.alejo.world_holidays.ui.theme.LightWhite
+import dev.alejo.world_holidays.ui.theme.Medium
+import dev.alejo.world_holidays.ui.theme.Small
 
 @Composable
 fun TextFieldWithDropdown(
@@ -44,7 +47,7 @@ fun TextFieldWithDropdown(
     }
     Box(
         modifier
-            .background(Color.Transparent)
+            .background(Color.Transparent),
     ) {
         TextField(
             modifier = Modifier
@@ -53,13 +56,14 @@ fun TextFieldWithDropdown(
                     if (!focusState.isFocused)
                         onDismissRequest()
                 }
-                .background(LightWhite),
+                .background(Color.Transparent),
             value = value,
             onValueChange = setValue,
             label = { Text(text = label, color = Color.White) },
-            shape = RoundedCornerShape(10.dp),
+            shape = RoundedCornerShape(Medium),
             colors = TextFieldDefaults.textFieldColors(
                 textColor = Color.White,
+                backgroundColor = LightWhite,
                 disabledTextColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
@@ -93,7 +97,7 @@ fun TextFieldWithDropdown(
 }
 
 @SuppressLint("UnrememberedMutableState")
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, backgroundColor = 0xFF335982)
 @Composable
 fun Pre() {
     val dropDownOptions = mutableStateOf(listOf<String>())
@@ -107,6 +111,6 @@ fun Pre() {
         onDismissRequest = { },
         dropDownExpanded = dropDownExpanded.value,
         list = dropDownOptions.value,
-        label = "CHILE"
+        label = "COLOMBIA"
     )
 }
