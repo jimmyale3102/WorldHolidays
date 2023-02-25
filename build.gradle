@@ -10,6 +10,7 @@ buildscript {
         coroutines_version = "1.6.1"
         hilt_version = "2.41"
         room_version = "2.5.0"
+        coil_version = "2.2.2"
         google_services_version = "4.3.14"
         crashlytics_version = "2.9.0"
     }
