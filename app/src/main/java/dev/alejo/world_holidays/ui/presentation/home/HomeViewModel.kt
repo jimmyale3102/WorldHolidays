@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.alejo.world_holidays.R
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_200
@@ -14,6 +15,8 @@ import dev.alejo.world_holidays.data.model.HolidayModel
 import dev.alejo.world_holidays.domain.GetHolidayUseCase
 import dev.alejo.world_holidays.domain.GetNextPublicHolidayUserCase
 import dev.alejo.world_holidays.domain.GetTodayHolidayUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -25,6 +28,39 @@ class HomeViewModel @Inject constructor(
     private val getNextPublicHolidayUseCase: GetNextPublicHolidayUserCase
 ): ViewModel(){
 
+    private lateinit var navHostController: NavHostController
+    val all = listOf("aaa", "baa", "aab", "abb", "bab", "bbbbb")
+
+    private val _searchValue = MutableStateFlow("")
+    val searchValue: StateFlow<String> = _searchValue
+
+    private val _dropdownExpanded = MutableStateFlow(false)
+    val dropdownExpanded: StateFlow<Boolean> = _dropdownExpanded
+
+    private val _dropdownOptions = MutableStateFlow(listOf<String>())
+    val dropdownOptions: StateFlow<List<String>> = _dropdownOptions
+
+    fun onCreate(navHostController: NavHostController) {
+        this.navHostController = navHostController
+    }
+
+    fun onSearchChanged(inputTyped: String) {
+        _dropdownExpanded.value = true
+        _searchValue.value = inputTyped
+        _dropdownOptions.value = all
+            .filter { it.uppercase().startsWith(inputTyped) && it.uppercase() != inputTyped }
+            .take(3)
+    }
+
+    fun onDropdownDismissRequest() {
+        _dropdownExpanded.value = false
+    }
+
+    fun onItemSelected() {
+        // Start searching with current _searchValue
+    }
+
+
     val holidayByYearResponse = MutableLiveData<List<HolidayModel>>()
     val nextPublicHolidayResponse = MutableLiveData<HolidayModel>()
     val todayHolidayResponse = MutableLiveData<String>()
@@ -33,7 +69,7 @@ class HomeViewModel @Inject constructor(
     val isGetHolidayByYearLoading = MutableLiveData<Boolean>()
     val isTodayHoliday = MutableLiveData<Boolean>()
 
-    fun onCreate(context: Context) {
+    fun onCreated(context: Context) {
         isTodayHoliday.postValue(false)
         todayHolidayDisplayed.postValue(false)
         val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()

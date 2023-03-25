@@ -1,37 +1,62 @@
 package dev.alejo.world_holidays.ui.presentation.home
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import dev.alejo.world_holidays.ui.*
-import dev.alejo.world_holidays.ui.presentation.home.components.TextFieldWithDropdown
-import dev.alejo.world_holidays.ui.theme.BlueLight
-import dev.alejo.world_holidays.ui.theme.Medium
-import dev.alejo.world_holidays.ui.theme.Small
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import dev.alejo.world_holidays.ui.composables.AboutIconButton
+import dev.alejo.world_holidays.ui.composables.HomeBackground
+import dev.alejo.world_holidays.ui.composables.VerticalSpacer
+import dev.alejo.world_holidays.ui.presentation.home.components.AutoCompleteSearchBar
+import dev.alejo.world_holidays.ui.theme.*
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
-    Box(Modifier.fillMaxSize()) {
+fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
+    viewModel.onCreate(navHostController)
+    val searchValue by viewModel.searchValue.collectAsState()
+    val dropdownExpanded by viewModel.dropdownExpanded.collectAsState()
+    val dropdownOptions by viewModel.dropdownOptions.collectAsState()
+    HomeScreenContent(
+        navHostController = navHostController,
+        searchValue = searchValue,
+        dropDownExpanded = dropdownExpanded,
+        dropDownOptions = dropdownOptions,
+        onDropdownDismissRequest = { viewModel.onDropdownDismissRequest() },
+        onItemSelected = { viewModel.onItemSelected() }
+    ) { inputTyped ->
+        viewModel.onSearchChanged(inputTyped)
+    }
+}
+
+@Composable
+fun HomeScreenContent(
+    navHostController: NavHostController,
+    searchValue: String,
+    dropDownExpanded: Boolean,
+    dropDownOptions: List<String>,
+    onDropdownDismissRequest: () -> Unit,
+    onItemSelected: () -> Unit,
+    onSearchChanged: (String) -> Unit
+) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(BlueLight)
+    ) {
         HomeBackground()
 
         Column(
@@ -39,93 +64,47 @@ fun HomeScreen(navController: NavHostController) {
                 .fillMaxWidth()
                 .padding(Medium)
         ) {
-            IconButton(
-                modifier = Modifier
-                    .align(alignment = Alignment.End)
-                    .then(Modifier.size(24.dp)),
-                onClick = {},
-            ) {
-                Icon(
-                    Icons.Default.Info,
-                    contentDescription = "",
-                    tint = Color.White
-                )
-            }
-            Spacer(Modifier.height(Medium))
-            TextFieldWithDropdown(
+            AboutIconButton(navHostController)
+            VerticalSpacer(space = Medium)
+            AutoCompleteSearchBar(
                 modifier = Modifier.padding(horizontal = Small),
-                value = textFieldValue.value,
-                setValue = ::onValueChanged,
-                onDismissRequest = ::onDropdownDismissRequest,
-                dropDownExpanded = dropDownExpanded.value,
-                list = dropDownOptions.value,
-                label = "Label"
+                text = searchValue,
+                onValueChange = { onSearchChanged(it) },
+                onDismissRequest = { onDropdownDismissRequest() },
+                onItemSelected = { onItemSelected() },
+                dropDownExpanded = dropDownExpanded,
+                list = dropDownOptions,
+                placeholder = "country"
             )
         }
 
         Column(
-            Modifier.align(Alignment.BottomCenter),
+            Modifier
+                .align(Alignment.BottomCenter)
+                .padding(horizontal = Medium)
+                .padding(bottom = XLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "New Year's Day",
-                color = Color.White,
-                fontSize = 34.sp
+                color = Yellow,
+                fontSize = 38.sp,
+                fontWeight = FontWeight.Bold
             )
+            VerticalSpacer(space = Medium)
             Text(
-                text = "New Year's Day is the first day of the year",
-                textAlign = TextAlign.Center,
+                text = "New Year's Day is the first day of the year, or January 1., in the Gregorian calendar.",
                 color = Color.White,
-                fontSize = 20.sp
+                fontSize = 22.sp,
+                textAlign = TextAlign.Center
             )
         }
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun HomeBackground() {
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Black,
-                        BlueLight
-                    ),
-                    startY = 0F,
-                    endY = 600F
-                )
-            )
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data("https://github.com/jimmyale3102/World-Holidays-Assets/blob/master/7.jpg?raw=true")
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .alpha(0.3F)
-        )
-    }
-}
-
-
-
-val all = listOf("aaa", "baa", "aab", "abb", "bab", "bbbbb")
-
-val dropDownOptions = mutableStateOf(listOf<String>())
-val textFieldValue = mutableStateOf(TextFieldValue())
-val dropDownExpanded = mutableStateOf(false)
-
-fun onDropdownDismissRequest() {
-    dropDownExpanded.value = false
-}
-
-fun onValueChanged(value: TextFieldValue) {
-    dropDownExpanded.value = true
-    textFieldValue.value = value
-    dropDownOptions.value = all.filter { it.startsWith(value.text) && it != value.text }.take(3)
+fun HomePreview() {
+    HomeScreen(navHostController = rememberAnimatedNavController())
 }

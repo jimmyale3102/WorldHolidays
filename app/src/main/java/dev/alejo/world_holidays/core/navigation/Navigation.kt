@@ -15,7 +15,7 @@ fun Navigation(
 ) {
     AnimatedNavHost(navController = navHostController, startDestination= startDestination) {
         composable(route = Screen.Home.route) {
-            HomeScreen(navController = navHostController)
+            HomeScreen(navHostController = navHostController)
         }
     }
 }

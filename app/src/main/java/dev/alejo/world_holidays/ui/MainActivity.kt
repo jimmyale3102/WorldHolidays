@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.alejo.world_holidays.core.navigation.Navigation
@@ -23,16 +22,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WorldHolidaysTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = BlueLight
-                ) {
-                    Navigation(
-                        navHostController = rememberAnimatedNavController(),
-                        startDestination = Screen.Home.route
-                    )
-                }
+                Navigation(
+                    navHostController = rememberAnimatedNavController(),
+                    startDestination = Screen.Home.route
+                )
             }
         }
     }

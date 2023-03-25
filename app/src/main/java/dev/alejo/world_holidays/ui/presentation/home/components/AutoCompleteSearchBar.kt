@@ -4,35 +4,35 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
-import dev.alejo.world_holidays.ui.theme.BlueDark
-import dev.alejo.world_holidays.ui.theme.LightWhite
-import dev.alejo.world_holidays.ui.theme.Medium
-import dev.alejo.world_holidays.ui.theme.Small
+import dev.alejo.world_holidays.ui.theme.*
 
 @Composable
-fun TextFieldWithDropdown(
+fun AutoCompleteSearchBar(
     modifier: Modifier = Modifier,
-    value: TextFieldValue,
-    setValue: (TextFieldValue) -> Unit,
+    text: String,
+    onValueChange: (String) -> Unit,
     onDismissRequest: () -> Unit,
+    onItemSelected: () -> Unit,
     dropDownExpanded: Boolean,
     list: List<String>,
-    label: String = ""
+    placeholder: String = ""
 ) {
     val trailingIcon = @Composable {
         IconButton(
@@ -53,13 +53,18 @@ fun TextFieldWithDropdown(
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
-                    if (!focusState.isFocused)
-                        onDismissRequest()
+                    if (!focusState.isFocused) onDismissRequest()
                 }
                 .background(Color.Transparent),
-            value = value,
-            onValueChange = setValue,
-            label = { Text(text = label, color = Color.White) },
+            value = text,
+            onValueChange = onValueChange,
+            placeholder = {
+                Text(
+                    text = placeholder.uppercase(),
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
+            },
             shape = RoundedCornerShape(Medium),
             colors = TextFieldDefaults.textFieldColors(
                 textColor = Color.White,
@@ -68,6 +73,11 @@ fun TextFieldWithDropdown(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
+            ),
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Characters,
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search
             ),
             trailingIcon = trailingIcon
         )
@@ -80,16 +90,14 @@ fun TextFieldWithDropdown(
             ),
             onDismissRequest = onDismissRequest
         ) {
-            list.forEach { text ->
-                DropdownMenuItem(onClick = {
-                    setValue(
-                        TextFieldValue(
-                            text,
-                            TextRange(text.length)
-                        )
-                    )
-                }) {
-                    Text(text = text)
+            list.forEach { item ->
+                DropdownMenuItem(
+                    onClick = {
+                        onValueChange(item)
+                        onItemSelected()
+                    }
+                ) {
+                    Text(text = item)
                 }
             }
         }
@@ -101,16 +109,17 @@ fun TextFieldWithDropdown(
 @Composable
 fun Pre() {
     val dropDownOptions = mutableStateOf(listOf<String>())
-    val textFieldValue = mutableStateOf(TextFieldValue())
+    val text by mutableStateOf("")
     val dropDownExpanded = mutableStateOf(false)
 
-    TextFieldWithDropdown(
+    AutoCompleteSearchBar(
         modifier = Modifier.fillMaxWidth(),
-        value = textFieldValue.value,
-        setValue = { },
+        text = text,
+        onValueChange = { },
         onDismissRequest = { },
+        onItemSelected = { },
         dropDownExpanded = dropDownExpanded.value,
         list = dropDownOptions.value,
-        label = "COLOMBIA"
+        placeholder = "COLOMBIA"
     )
 }
