@@ -7,7 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +20,8 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dev.alejo.world_holidays.ui.composables.AboutIconButton
 import dev.alejo.world_holidays.ui.composables.HomeBackground
 import dev.alejo.world_holidays.ui.composables.VerticalSpacer
-import dev.alejo.world_holidays.ui.presentation.home.components.AutoCompleteSearchBar
+import dev.alejo.world_holidays.ui.presentation.home.view.components.AutoCompleteSearchBar
+import dev.alejo.world_holidays.ui.presentation.home.viewmodel.HomeViewModel
 import dev.alejo.world_holidays.ui.theme.*
 
 @Composable

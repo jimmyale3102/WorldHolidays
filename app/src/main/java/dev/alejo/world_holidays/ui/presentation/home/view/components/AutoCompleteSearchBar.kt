@@ -1,4 +1,4 @@
-package dev.alejo.world_holidays.ui.presentation.home.components
+package dev.alejo.world_holidays.ui.presentation.home.view.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
