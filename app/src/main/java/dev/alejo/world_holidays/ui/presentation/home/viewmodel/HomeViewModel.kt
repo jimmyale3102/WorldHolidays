@@ -1,6 +1,7 @@
-package dev.alejo.world_holidays.ui.presentation.home
+package dev.alejo.world_holidays.ui.presentation.home.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,12 +12,15 @@ import dev.alejo.world_holidays.core.Constants.Companion.CODE_200
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_204
 import dev.alejo.world_holidays.core.Constants.Companion.COLOMBIA_CODE
 import dev.alejo.world_holidays.core.DateUtils
+import dev.alejo.world_holidays.core.Response
 import dev.alejo.world_holidays.data.model.HolidayModel
+import dev.alejo.world_holidays.domain.GetCountriesUseCase
 import dev.alejo.world_holidays.domain.GetHolidayUseCase
 import dev.alejo.world_holidays.domain.GetNextPublicHolidayUserCase
 import dev.alejo.world_holidays.domain.GetTodayHolidayUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -25,7 +29,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getHolidayUseCase: GetHolidayUseCase,
     private val getTodayHolidayUseCase: GetTodayHolidayUseCase,
-    private val getNextPublicHolidayUseCase: GetNextPublicHolidayUserCase
+    private val getNextPublicHolidayUseCase: GetNextPublicHolidayUserCase,
+    private val getCountriesUseCase: GetCountriesUseCase
 ): ViewModel(){
 
     private lateinit var navHostController: NavHostController
@@ -40,8 +45,25 @@ class HomeViewModel @Inject constructor(
     private val _dropdownOptions = MutableStateFlow(listOf<String>())
     val dropdownOptions: StateFlow<List<String>> = _dropdownOptions
 
+    init {
+        getCountries()
+    }
+
     fun onCreate(navHostController: NavHostController) {
         this.navHostController = navHostController
+    }
+
+    private fun getCountries() {
+        viewModelScope.launch {
+            getCountriesUseCase().collect {
+                Log.e(
+                    "Countries",
+                    it.data?.let {
+                        it.size.toString()
+                    } ?: it.message ?: "Error"
+                )
+            }
+        }
     }
 
     fun onSearchChanged(inputTyped: String) {
