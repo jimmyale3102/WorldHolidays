@@ -11,5 +11,6 @@ class Constants {
         const val NOTIFICATION_TITLE = "¡It's holiday!"
         const val MESSAGE_EXTRA = "messageExtra"
         const val NOTIFICATION_ID_EXTRA = "notificationIdExtra"
+        const val COUNTRY_COLLECTION = "countries"
     }
 }
