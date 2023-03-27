@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import dev.alejo.world_holidays.ui.presentation.home.HomeScreen
+import dev.alejo.world_holidays.ui.presentation.home.view.HomeScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

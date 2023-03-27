@@ -1,7 +1,6 @@
 package dev.alejo.world_holidays.ui.presentation.home.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,7 @@ import dev.alejo.world_holidays.core.Constants.Companion.CODE_200
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_204
 import dev.alejo.world_holidays.core.Constants.Companion.COLOMBIA_CODE
 import dev.alejo.world_holidays.core.DateUtils
-import dev.alejo.world_holidays.core.Response
+import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.data.model.HolidayModel
 import dev.alejo.world_holidays.domain.GetCountriesUseCase
 import dev.alejo.world_holidays.domain.GetHolidayUseCase
@@ -20,7 +19,6 @@ import dev.alejo.world_holidays.domain.GetNextPublicHolidayUserCase
 import dev.alejo.world_holidays.domain.GetTodayHolidayUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -34,7 +32,7 @@ class HomeViewModel @Inject constructor(
 ): ViewModel(){
 
     private lateinit var navHostController: NavHostController
-    val all = listOf("aaa", "baa", "aab", "abb", "bab", "bbbbb")
+    private lateinit var availableCountries: List<Country>
 
     private val _searchValue = MutableStateFlow("")
     val searchValue: StateFlow<String> = _searchValue
@@ -42,8 +40,8 @@ class HomeViewModel @Inject constructor(
     private val _dropdownExpanded = MutableStateFlow(false)
     val dropdownExpanded: StateFlow<Boolean> = _dropdownExpanded
 
-    private val _dropdownOptions = MutableStateFlow(listOf<String>())
-    val dropdownOptions: StateFlow<List<String>> = _dropdownOptions
+    private val _dropdownOptions = MutableStateFlow(listOf<Country>())
+    val dropdownOptions: StateFlow<List<Country>> = _dropdownOptions
 
     init {
         getCountries()
@@ -55,17 +53,9 @@ class HomeViewModel @Inject constructor(
 
     private fun getCountries() {
         viewModelScope.launch {
-            getCountriesUseCase().collect {
-                Log.e(
-                    "Countries",
-                    it.data?.let {
-                        it.size.toString()
-                    } ?: it.message ?: "Error"
-                )
-                it.data?.let {
-                    it.sortedBy { it.name }.forEach {
-                        println(it.toString())
-                    }
+            getCountriesUseCase().collect { countriesResponse ->
+                countriesResponse.data?.let { countries ->
+                    availableCountries = countries
                 }
             }
         }
@@ -74,9 +64,11 @@ class HomeViewModel @Inject constructor(
     fun onSearchChanged(inputTyped: String) {
         _dropdownExpanded.value = true
         _searchValue.value = inputTyped
-        _dropdownOptions.value = all
-            .filter { it.uppercase().startsWith(inputTyped) && it.uppercase() != inputTyped }
-            .take(3)
+        _dropdownOptions.value = availableCountries
+            .filter {country ->
+                country.name.uppercase().startsWith(inputTyped) && country.name.uppercase() != inputTyped
+            }
+            .take(10)
     }
 
     fun onDropdownDismissRequest() {

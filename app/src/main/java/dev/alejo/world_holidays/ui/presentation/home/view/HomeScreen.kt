@@ -1,4 +1,4 @@
-package dev.alejo.world_holidays.ui.presentation.home
+package dev.alejo.world_holidays.ui.presentation.home.view
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.ui.composables.AboutIconButton
 import dev.alejo.world_holidays.ui.composables.HomeBackground
 import dev.alejo.world_holidays.ui.composables.VerticalSpacer
@@ -47,7 +48,7 @@ fun HomeScreenContent(
     navHostController: NavHostController,
     searchValue: String,
     dropDownExpanded: Boolean,
-    dropDownOptions: List<String>,
+    dropDownOptions: List<Country>,
     onDropdownDismissRequest: () -> Unit,
     onItemSelected: () -> Unit,
     onSearchChanged: (String) -> Unit
