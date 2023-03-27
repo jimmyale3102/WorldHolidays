@@ -63,6 +63,7 @@ dependencies {
     implementation "androidx.activity:activity-compose:$activity_version"
     implementation "com.google.accompanist:accompanist-navigation-animation:$animated_navigation_version"
     implementation "io.coil-kt:coil-compose:$coil_version"
+    implementation("io.coil-kt:coil-svg:$coil_version")
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:30.1.0')
