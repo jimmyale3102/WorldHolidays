@@ -1,5 +1,6 @@
 package dev.alejo.world_holidays.data.network
 
+import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.data.model.HolidayModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -8,6 +9,10 @@ import javax.inject.Inject
 class HolidayService @Inject constructor(
     private val api: HolidayApiClient
 ) {
+
+    suspend fun getAvailableCountries(): List<Country> = withContext(Dispatchers.IO) {
+        api.getAvailableCountries().body() ?: emptyList()
+    }
 
     suspend fun getHolidaysByYear(countryCode: String, year: String): List<HolidayModel> {
         return withContext(Dispatchers.IO) {

@@ -21,5 +21,6 @@ object HolidayModule {
 
     @Singleton
     @Provides
-    fun provideCountryRepository(): CountryRepository = CountryRepositoryImpl()
+    fun provideCountryRepository(service: HolidayService): CountryRepository =
+        CountryRepositoryImpl(service)
 }

@@ -62,6 +62,11 @@ class HomeViewModel @Inject constructor(
                         it.size.toString()
                     } ?: it.message ?: "Error"
                 )
+                it.data?.let {
+                    it.sortedBy { it.name }.forEach {
+                        println(it.toString())
+                    }
+                }
             }
         }
     }
