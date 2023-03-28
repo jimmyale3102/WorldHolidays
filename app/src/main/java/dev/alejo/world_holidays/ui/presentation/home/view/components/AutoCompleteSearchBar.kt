@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,16 +20,18 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
+import dev.alejo.world_holidays.R
 import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.ui.composables.HorizontalSpacer
 import dev.alejo.world_holidays.ui.theme.*
@@ -36,7 +39,7 @@ import dev.alejo.world_holidays.ui.theme.*
 @Composable
 fun AutoCompleteSearchBar(
     modifier: Modifier = Modifier,
-    text: String,
+    value: Country,
     onValueChange: (String) -> Unit,
     onDismissRequest: () -> Unit,
     onItemSelected: () -> Unit,
@@ -46,12 +49,13 @@ fun AutoCompleteSearchBar(
 ) {
     val trailingIcon = @Composable {
         IconButton(
-            onClick = { },
+            onClick = { onItemSelected() },
         ) {
             Icon(
                 Icons.Default.Search,
                 contentDescription = "",
-                tint = Color.White
+                tint = Color.White,
+                modifier = Modifier.size(32.dp)
             )
         }
     }
@@ -66,13 +70,25 @@ fun AutoCompleteSearchBar(
                     if (!focusState.isFocused) onDismissRequest()
                 }
                 .background(Color.Transparent),
-            value = text,
+            value = value.name,
+            leadingIcon = {
+                if (value.countryCode.isEmpty()) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.flag_circle),
+                        tint = BlueDark,
+                        contentDescription = "flag",
+                        modifier = Modifier.size(32.dp)
+                    )
+                } else {
+                    CountryImage(countryCode = value.countryCode)
+                }
+            },
             onValueChange = onValueChange,
-            placeholder = {
+            label = {
                 Text(
                     text = placeholder.uppercase(),
-                    color = Color.White,
-                    fontSize = 14.sp
+                    color = BlueDark,
+                    fontWeight = FontWeight.Bold
                 )
             },
             shape = RoundedCornerShape(Medium),
@@ -89,9 +105,11 @@ fun AutoCompleteSearchBar(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Search
             ),
+            keyboardActions = KeyboardActions(onSearch = { onItemSelected() }),
             trailingIcon = trailingIcon
         )
         DropdownMenu(
+            modifier = Modifier.fillMaxWidth(),
             expanded = dropDownExpanded,
             properties = PopupProperties(
                 focusable = false,
@@ -103,7 +121,7 @@ fun AutoCompleteSearchBar(
             list.forEach { countryItem ->
                 DropdownMenuItem(
                     onClick = {
-                        onValueChange(countryItem.name)
+                        onValueChange(countryItem.name.uppercase())
                         onItemSelected()
                     }
                 ) {
@@ -133,6 +151,7 @@ private fun CountryImage(countryCode: String) {
             )
             .decoderFactory(SvgDecoder.Factory())
             .crossfade(true)
+            .placeholder(drawableResId = R.drawable.flag_circle)
             .build(),
         contentDescription = null,
         contentScale = ContentScale.Crop,
@@ -147,12 +166,12 @@ private fun CountryImage(countryCode: String) {
 @Composable
 fun Pre() {
     val dropDownOptions = mutableStateOf(listOf<Country>(Country(name = "USA", countryCode = "us")))
-    val text by mutableStateOf("U")
+    val text by mutableStateOf(Country(name = "Colombia", countryCode = "CO"))
     val dropDownExpanded = mutableStateOf(true)
 
     AutoCompleteSearchBar(
         modifier = Modifier.fillMaxWidth(),
-        text = text,
+        value = text,
         onValueChange = { },
         onDismissRequest = { },
         onItemSelected = { },

@@ -8,8 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,19 +28,27 @@ import dev.alejo.world_holidays.ui.presentation.home.view.components.AutoComplet
 import dev.alejo.world_holidays.ui.presentation.home.viewmodel.HomeViewModel
 import dev.alejo.world_holidays.ui.theme.*
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
     viewModel.onCreate(navHostController)
     val searchValue by viewModel.searchValue.collectAsState()
     val dropdownExpanded by viewModel.dropdownExpanded.collectAsState()
     val dropdownOptions by viewModel.dropdownOptions.collectAsState()
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
     HomeScreenContent(
         navHostController = navHostController,
         searchValue = searchValue,
         dropDownExpanded = dropdownExpanded,
         dropDownOptions = dropdownOptions,
         onDropdownDismissRequest = { viewModel.onDropdownDismissRequest() },
-        onItemSelected = { viewModel.onItemSelected() }
+        onItemSelected = {
+            viewModel.onItemSelected()
+            keyboardController?.hide()
+            focusManager.clearFocus()
+        }
     ) { inputTyped ->
         viewModel.onSearchChanged(inputTyped)
     }
@@ -46,7 +57,7 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
 @Composable
 fun HomeScreenContent(
     navHostController: NavHostController,
-    searchValue: String,
+    searchValue: Country,
     dropDownExpanded: Boolean,
     dropDownOptions: List<Country>,
     onDropdownDismissRequest: () -> Unit,
@@ -69,7 +80,7 @@ fun HomeScreenContent(
             VerticalSpacer(space = Medium)
             AutoCompleteSearchBar(
                 modifier = Modifier.padding(horizontal = Small),
-                text = searchValue,
+                value = searchValue,
                 onValueChange = { onSearchChanged(it) },
                 onDismissRequest = { onDropdownDismissRequest() },
                 onItemSelected = { onItemSelected() },
