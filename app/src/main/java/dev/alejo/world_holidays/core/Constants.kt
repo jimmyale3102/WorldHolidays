@@ -11,5 +11,7 @@ class Constants {
         const val NOTIFICATION_TITLE = "¡It's holiday!"
         const val MESSAGE_EXTRA = "messageExtra"
         const val NOTIFICATION_ID_EXTRA = "notificationIdExtra"
+        const val COUNTRY_FLAG_IMG_URL = "https://date.nager.at/images/circle-flags/flags/%s.svg"
+        const val HOME_BACKGROUND_IMG_URL = "https://github.com/jimmyale3102/World-Holidays-Assets/blob/master/%d.jpg?raw=true"
     }
 }

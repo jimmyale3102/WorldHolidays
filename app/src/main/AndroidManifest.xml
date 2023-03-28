@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="dev.alejo.world_holidays">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -15,7 +17,7 @@
         android:theme="@style/Theme.WorldHolidays"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.WorldHolidays">
             <intent-filter>

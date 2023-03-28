@@ -1,11 +1,15 @@
 package dev.alejo.world_holidays.data.network
 
+import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.data.model.HolidayModel
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface HolidayApiClient {
+
+    @GET("AvailableCountries")
+    suspend fun getAvailableCountries(): Response<List<Country>>
 
     @GET("IsTodayPublicHoliday/{countryCode}")
     suspend fun getTodayHoliday(@Path("countryCode") countryCode: String): Response<Void>

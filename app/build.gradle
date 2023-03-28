@@ -30,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -45,6 +45,11 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
         }
     }
 }
@@ -61,6 +66,9 @@ dependencies {
     implementation "androidx.compose.material3:material3:$compose_material_3_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.activity:activity-compose:$activity_version"
+    implementation "com.google.accompanist:accompanist-navigation-animation:$animated_navigation_version"
+    implementation "io.coil-kt:coil-compose:$coil_version"
+    implementation("io.coil-kt:coil-svg:$coil_version")
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:30.1.0')
@@ -80,10 +88,14 @@ dependencies {
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.2'
+
 
     // Dagger-Hilt
+    implementation "androidx.hilt:hilt-navigation-compose:$hilt_compose_version"
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
     // Room
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"

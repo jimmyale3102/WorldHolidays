@@ -8,8 +8,11 @@ buildscript {
         kotlin_version = "1.6.10"
         retrofit_version = "2.9.0"
         coroutines_version = "1.6.1"
+        hilt_compose_version = "1.0.0"
+        animated_navigation_version = "0.27.1"
         hilt_version = "2.41"
         room_version = "2.5.0"
+        coil_version = "2.2.2"
         google_services_version = "4.3.14"
         crashlytics_version = "2.9.0"
     }
