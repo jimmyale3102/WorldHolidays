@@ -2,6 +2,7 @@
     <string name="app_name">WorldHolidays</string>
     <string name="app_version" translatable="false">Version: 1.0.0</string>
     <string name="country_search_placeholder">COUNTRY</string>
+    <string name="all_holidays">All Holidays</string>
 
     <string name="today_is_holiday">¡Today is a public holiday!</string>
     <string name="today_is_not_holiday">Today is not a public holiday</string>
@@ -11,5 +12,6 @@
     <string name="about_app_content_desc">About World holidays</string>
     <string name="country_flag_content_desc">Country flag</string>
     <string name="country_search_content_desc">Country search icon</string>
-
+    <string name="list_view_icon_content_desc">List view icon</string>
+    <string name="calendar_view_icon_content_desc">Calendar view icon</string>
 </resources>
