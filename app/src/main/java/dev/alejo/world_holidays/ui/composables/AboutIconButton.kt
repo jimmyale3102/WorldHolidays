@@ -1,6 +1,5 @@
 package dev.alejo.world_holidays.ui.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -12,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import dev.alejo.world_holidays.R
 import dev.alejo.world_holidays.core.navigation.Screen
 
 @Composable
@@ -29,7 +30,7 @@ fun AboutIconButton(navHostController: NavHostController) {
         ) {
             Icon(
                 Icons.Default.Info,
-                contentDescription = "",
+                contentDescription = stringResource(id = R.string.about_app_content_desc),
                 tint = Color.White
             )
         }

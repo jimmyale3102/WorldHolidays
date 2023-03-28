@@ -22,7 +22,7 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.ui.composables.AboutIconButton
-import dev.alejo.world_holidays.ui.composables.HomeBackground
+import dev.alejo.world_holidays.ui.presentation.home.view.components.HomeBackground
 import dev.alejo.world_holidays.ui.composables.VerticalSpacer
 import dev.alejo.world_holidays.ui.presentation.home.view.components.AutoCompleteSearchBar
 import dev.alejo.world_holidays.ui.presentation.home.viewmodel.HomeViewModel
@@ -32,6 +32,8 @@ import dev.alejo.world_holidays.ui.theme.*
 @Composable
 fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
     viewModel.onCreate(navHostController)
+    val holidayTitle by viewModel.holidayTitle.collectAsState()
+    val holidayDescription by viewModel.holidayDescription.collectAsState()
     val searchValue by viewModel.searchValue.collectAsState()
     val dropdownExpanded by viewModel.dropdownExpanded.collectAsState()
     val dropdownOptions by viewModel.dropdownOptions.collectAsState()
@@ -39,6 +41,8 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     HomeScreenContent(
+        holidayTitle = holidayTitle,
+        holidayDescription = holidayDescription,
         navHostController = navHostController,
         searchValue = searchValue,
         dropDownExpanded = dropdownExpanded,
@@ -56,6 +60,8 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
 
 @Composable
 fun HomeScreenContent(
+    holidayTitle: String,
+    holidayDescription: String,
     navHostController: NavHostController,
     searchValue: Country,
     dropDownExpanded: Boolean,
@@ -85,8 +91,7 @@ fun HomeScreenContent(
                 onDismissRequest = { onDropdownDismissRequest() },
                 onItemSelected = { onItemSelected() },
                 dropDownExpanded = dropDownExpanded,
-                list = dropDownOptions,
-                placeholder = "country"
+                list = dropDownOptions
             )
         }
 
@@ -98,14 +103,14 @@ fun HomeScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "New Year's Day",
+                text = holidayTitle,
                 color = Yellow,
                 fontSize = 38.sp,
                 fontWeight = FontWeight.Bold
             )
             VerticalSpacer(space = Medium)
             Text(
-                text = "New Year's Day is the first day of the year, or January 1., in the Gregorian calendar.",
+                text = holidayDescription,
                 color = Color.White,
                 fontSize = 22.sp,
                 textAlign = TextAlign.Center

@@ -1,4 +1,4 @@
-package dev.alejo.world_holidays.ui.composables
+package dev.alejo.world_holidays.ui.presentation.home.view.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,6 +12,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import dev.alejo.world_holidays.core.Constants
 import dev.alejo.world_holidays.ui.theme.BlueLight
 
 @Composable
@@ -32,7 +33,7 @@ fun HomeBackground() {
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data("https://github.com/jimmyale3102/World-Holidays-Assets/blob/master/${getRandomNumber()}.jpg?raw=true")
+                .data(Constants.HOME_BACKGROUND_IMG_URL.format(getRandomNumber()))
                 .crossfade(true)
                 .build(),
             contentDescription = null,

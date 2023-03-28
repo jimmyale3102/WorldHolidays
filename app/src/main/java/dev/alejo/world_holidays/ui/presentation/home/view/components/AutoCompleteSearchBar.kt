@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -32,6 +33,7 @@ import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import dev.alejo.world_holidays.R
+import dev.alejo.world_holidays.core.Constants
 import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.ui.composables.HorizontalSpacer
 import dev.alejo.world_holidays.ui.theme.*
@@ -44,8 +46,7 @@ fun AutoCompleteSearchBar(
     onDismissRequest: () -> Unit,
     onItemSelected: () -> Unit,
     dropDownExpanded: Boolean,
-    list: List<Country>,
-    placeholder: String = ""
+    list: List<Country>
 ) {
     val trailingIcon = @Composable {
         IconButton(
@@ -53,7 +54,7 @@ fun AutoCompleteSearchBar(
         ) {
             Icon(
                 Icons.Default.Search,
-                contentDescription = "",
+                contentDescription = stringResource(id = R.string.country_search_content_desc),
                 tint = Color.White,
                 modifier = Modifier.size(32.dp)
             )
@@ -76,7 +77,7 @@ fun AutoCompleteSearchBar(
                     Icon(
                         painter = painterResource(id = R.drawable.flag_circle),
                         tint = BlueDark,
-                        contentDescription = "flag",
+                        contentDescription = stringResource(id = R.string.country_flag_content_desc),
                         modifier = Modifier.size(32.dp)
                     )
                 } else {
@@ -86,7 +87,7 @@ fun AutoCompleteSearchBar(
             onValueChange = onValueChange,
             label = {
                 Text(
-                    text = placeholder.uppercase(),
+                    text = stringResource(id = R.string.country_search_placeholder),
                     color = BlueDark,
                     fontWeight = FontWeight.Bold
                 )
@@ -145,10 +146,7 @@ private fun CountryItem(countryItem: Country) {
 private fun CountryImage(countryCode: String) {
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(
-                "https://date.nager.at/images/circle-flags/flags/%s.svg"
-                    .format(countryCode.lowercase())
-            )
+            .data(Constants.COUNTRY_FLAG_IMG_URL.format(countryCode.lowercase()))
             .decoderFactory(SvgDecoder.Factory())
             .crossfade(true)
             .placeholder(drawableResId = R.drawable.flag_circle)
@@ -176,7 +174,6 @@ fun Pre() {
         onDismissRequest = { },
         onItemSelected = { },
         dropDownExpanded = dropDownExpanded.value,
-        list = dropDownOptions.value,
-        placeholder = "COLOMBIA"
+        list = dropDownOptions.value
     )
 }

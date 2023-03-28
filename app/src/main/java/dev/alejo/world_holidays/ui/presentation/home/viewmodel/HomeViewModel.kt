@@ -34,6 +34,12 @@ class HomeViewModel @Inject constructor(
     private lateinit var navHostController: NavHostController
     private lateinit var availableCountries: List<Country>
 
+    private val _holidayTitle = MutableStateFlow("New Year's Day")
+    val holidayTitle: StateFlow<String> = _holidayTitle
+
+    private val _holidayDescription = MutableStateFlow("New Year's Day is the first day of the year, or January 1., in the Gregorian calendar.")
+    val holidayDescription: StateFlow<String> = _holidayDescription
+
     private val _searchValue = MutableStateFlow(Country(name = "", countryCode = ""))
     val searchValue: StateFlow<Country> = _searchValue
 
