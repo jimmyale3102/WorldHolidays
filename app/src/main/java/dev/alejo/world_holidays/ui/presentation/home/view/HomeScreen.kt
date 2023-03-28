@@ -3,7 +3,7 @@ package dev.alejo.world_holidays.ui.presentation.home.view
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,9 +22,10 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.ui.composables.AboutIconButton
-import dev.alejo.world_holidays.ui.presentation.home.view.components.HomeBackground
 import dev.alejo.world_holidays.ui.composables.VerticalSpacer
 import dev.alejo.world_holidays.ui.presentation.home.view.components.AutoCompleteSearchBar
+import dev.alejo.world_holidays.ui.presentation.home.view.components.HomeBackground
+import dev.alejo.world_holidays.ui.presentation.home.view.components.HomeBottomSheet
 import dev.alejo.world_holidays.ui.presentation.home.viewmodel.HomeViewModel
 import dev.alejo.world_holidays.ui.theme.*
 
@@ -40,6 +41,7 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+
     HomeScreenContent(
         holidayTitle = holidayTitle,
         holidayDescription = holidayDescription,
@@ -60,6 +62,33 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
 
 @Composable
 fun HomeScreenContent(
+    holidayTitle: String,
+    holidayDescription: String,
+    navHostController: NavHostController,
+    searchValue: Country,
+    dropDownExpanded: Boolean,
+    dropDownOptions: List<Country>,
+    onDropdownDismissRequest: () -> Unit,
+    onItemSelected: () -> Unit,
+    onSearchChanged: (String) -> Unit
+) {
+    HomeBottomSheet {
+        HomeContent(
+            holidayTitle = holidayTitle,
+            holidayDescription = holidayDescription,
+            navHostController = navHostController,
+            searchValue = searchValue,
+            dropDownExpanded = dropDownExpanded,
+            dropDownOptions = dropDownOptions,
+            onDropdownDismissRequest = onDropdownDismissRequest,
+            onItemSelected = onItemSelected,
+            onSearchChanged = onSearchChanged
+        )
+    }
+}
+
+@Composable
+fun HomeContent(
     holidayTitle: String,
     holidayDescription: String,
     navHostController: NavHostController,
@@ -99,7 +128,7 @@ fun HomeScreenContent(
             Modifier
                 .align(Alignment.BottomCenter)
                 .padding(horizontal = Medium)
-                .padding(bottom = XLarge),
+                .padding(bottom = XMediumLarge),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
