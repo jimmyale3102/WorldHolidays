@@ -29,13 +29,13 @@ class HomeViewModel @Inject constructor(
     private val getTodayHolidayUseCase: GetTodayHolidayUseCase,
     private val getNextPublicHolidayUseCase: GetNextPublicHolidayUserCase,
     private val getCountriesUseCase: GetCountriesUseCase
-): ViewModel(){
+) : ViewModel() {
 
     private lateinit var navHostController: NavHostController
     private lateinit var availableCountries: List<Country>
 
-    private val _searchValue = MutableStateFlow("")
-    val searchValue: StateFlow<String> = _searchValue
+    private val _searchValue = MutableStateFlow(Country(name = "", countryCode = ""))
+    val searchValue: StateFlow<Country> = _searchValue
 
     private val _dropdownExpanded = MutableStateFlow(false)
     val dropdownExpanded: StateFlow<Boolean> = _dropdownExpanded
@@ -55,20 +55,22 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getCountriesUseCase().collect { countriesResponse ->
                 countriesResponse.data?.let { countries ->
-                    availableCountries = countries
+                    availableCountries = countries.map { country ->
+                        Country(name = country.name.uppercase(), countryCode = country.countryCode)
+                    }
                 }
             }
         }
     }
 
     fun onSearchChanged(inputTyped: String) {
-        _dropdownExpanded.value = true
-        _searchValue.value = inputTyped
+        _searchValue.value = Country(name = inputTyped, countryCode = "")
         _dropdownOptions.value = availableCountries
-            .filter {country ->
-                country.name.uppercase().startsWith(inputTyped) && country.name.uppercase() != inputTyped
+            .filter { country ->
+                country.name.startsWith(inputTyped) && country.name != inputTyped
             }
             .take(10)
+        _dropdownExpanded.value = _dropdownOptions.value.isNotEmpty()
     }
 
     fun onDropdownDismissRequest() {
@@ -76,7 +78,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onItemSelected() {
-        // Start searching with current _searchValue
+        _searchValue.value = Country(
+            name = _searchValue.value.name,
+            countryCode = availableCountries.find {
+                    country -> country.name == _searchValue.value.name
+            }?.countryCode ?: ""
+        )
     }
 
 
@@ -102,9 +109,9 @@ class HomeViewModel @Inject constructor(
             isTodayHolidayLoading.postValue(true)
             getTodayHolidayUseCase(COLOMBIA_CODE).let { responseCode ->
                 isTodayHolidayLoading.postValue(false)
-                if(responseCode != CODE_200) {
+                if (responseCode != CODE_200) {
                     todayHolidayResponse.postValue(
-                        when(responseCode) {
+                        when (responseCode) {
                             CODE_200 -> context.getString(R.string.today_is_holiday)
                             CODE_204 -> context.getString(R.string.today_is_not_holiday)
                             else -> context.getString(R.string.validation_failure)
@@ -119,9 +126,9 @@ class HomeViewModel @Inject constructor(
     fun getNextHolidayByYear() {
         viewModelScope.launch {
             val result = getNextPublicHolidayUseCase(COLOMBIA_CODE)
-            if(result.isNotEmpty())
+            if (result.isNotEmpty())
                 nextPublicHolidayResponse.postValue(
-                    if(getTodayHolidayName(result).isEmpty()) result[0] else result[1]
+                    if (getTodayHolidayName(result).isEmpty()) result[0] else result[1]
                 )
         }
     }
@@ -130,10 +137,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             isGetHolidayByYearLoading.postValue(true)
             val result = getHolidayUseCase(COLOMBIA_CODE, year)
-            if(result.isNotEmpty()) {
+            if (result.isNotEmpty()) {
                 holidayByYearResponse.postValue(result)
                 val todayHolidayName = getTodayHolidayName(result)
-                if(todayHolidayDisplayed.value == false && todayHolidayName.isNotEmpty()) {
+                if (todayHolidayDisplayed.value == false && todayHolidayName.isNotEmpty()) {
                     todayHolidayDisplayed.postValue(true)
                     todayHolidayResponse.postValue(todayHolidayName)
                     isTodayHoliday.postValue(true)
@@ -145,9 +152,10 @@ class HomeViewModel @Inject constructor(
 
     private fun getTodayHolidayName(allHolidays: List<HolidayModel>): String {
         val currentDate = Calendar.getInstance()
-        val holiday = allHolidays.filter { it.date == DateUtils.getStringDateFromDate(currentDate.time) }
-        if(holiday.isNotEmpty())
-            return if(Locale.getDefault().language == "en") holiday[0].name else holiday[0].localName
+        val holiday =
+            allHolidays.filter { it.date == DateUtils.getStringDateFromDate(currentDate.time) }
+        if (holiday.isNotEmpty())
+            return if (Locale.getDefault().language == "en") holiday[0].name else holiday[0].localName
         return ""
     }
 
