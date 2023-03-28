@@ -11,6 +11,7 @@ import dev.alejo.world_holidays.core.Constants.Companion.CODE_200
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_204
 import dev.alejo.world_holidays.core.Constants.Companion.COLOMBIA_CODE
 import dev.alejo.world_holidays.core.DateUtils
+import dev.alejo.world_holidays.core.navigation.Screen
 import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.data.model.HolidayModel
 import dev.alejo.world_holidays.domain.GetCountriesUseCase
@@ -164,5 +165,4 @@ class HomeViewModel @Inject constructor(
             return if (Locale.getDefault().language == "en") holiday[0].name else holiday[0].localName
         return ""
     }
-
 }
