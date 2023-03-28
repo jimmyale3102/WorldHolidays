@@ -2,6 +2,7 @@ buildscript {
     ext {
         core_version = "1.9.0"
         compose_version = "1.2.0-alpha05"
+        compose_tool_version = "1.2.0-alpha05"
         compose_material_3_version = "1.0.1"
         activity_version = "1.6.1"
         lifecycle_version = "2.5.1"
