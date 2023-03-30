@@ -16,6 +16,7 @@ buildscript {
         coil_version = "2.2.2"
         google_services_version = "4.3.14"
         crashlytics_version = "2.9.0"
+        kalendar_version = "1.2.0"
     }
 }
 plugins {
