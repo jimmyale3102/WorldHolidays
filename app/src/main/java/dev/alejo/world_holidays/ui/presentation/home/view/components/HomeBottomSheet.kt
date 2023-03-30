@@ -78,6 +78,7 @@ private fun PeekContent() {
             // Show List view
         } else {
             // show Calendar view
+            HolidaysCalendar()
         }
 
     }
