@@ -40,7 +40,7 @@ fun HomeBackground() {
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
-                .alpha(0.3F)
+                .alpha(0.2F)
         )
     }
 }

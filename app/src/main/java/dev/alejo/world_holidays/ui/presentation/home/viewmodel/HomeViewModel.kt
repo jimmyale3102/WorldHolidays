@@ -11,7 +11,6 @@ import dev.alejo.world_holidays.core.Constants.Companion.CODE_200
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_204
 import dev.alejo.world_holidays.core.Constants.Companion.COLOMBIA_CODE
 import dev.alejo.world_holidays.core.DateUtils
-import dev.alejo.world_holidays.core.navigation.Screen
 import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.data.model.HolidayModel
 import dev.alejo.world_holidays.domain.GetCountriesUseCase
@@ -34,6 +33,9 @@ class HomeViewModel @Inject constructor(
 
     private lateinit var navHostController: NavHostController
     private lateinit var availableCountries: List<Country>
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     private val _holidayTitle = MutableStateFlow("New Year's Day")
     val holidayTitle: StateFlow<String> = _holidayTitle
@@ -59,6 +61,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getCountries() {
+        _isLoading.value = true
         viewModelScope.launch {
             getCountriesUseCase().collect { countriesResponse ->
                 countriesResponse.data?.let { countries ->
@@ -67,6 +70,7 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
+            _isLoading.value = false
         }
     }
 
@@ -87,10 +91,17 @@ class HomeViewModel @Inject constructor(
     fun onItemSelected() {
         _searchValue.value = Country(
             name = _searchValue.value.name,
-            countryCode = availableCountries.find {
-                    country -> country.name == _searchValue.value.name
+            countryCode = availableCountries.find { country ->
+                country.name == _searchValue.value.name
             }?.countryCode ?: ""
         )
+        validateSearchToGetData()
+    }
+
+    private fun validateSearchToGetData() {
+        if (_searchValue.value.countryCode.isNotEmpty()) {
+            getHolidayByYear(Calendar.getInstance().get(Calendar.YEAR).toString())
+        }
     }
 
 
@@ -105,28 +116,22 @@ class HomeViewModel @Inject constructor(
     fun onCreated(context: Context) {
         isTodayHoliday.postValue(false)
         todayHolidayDisplayed.postValue(false)
-        val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
-        getHolidayByYear(currentYear)
+        getHolidayByYear("2022")
         getNextHolidayByYear()
         getTodayHoliday(context)
     }
 
     private fun getTodayHoliday(context: Context) {
         viewModelScope.launch {
-            isTodayHolidayLoading.postValue(true)
-            getTodayHolidayUseCase(COLOMBIA_CODE).let { responseCode ->
-                isTodayHolidayLoading.postValue(false)
-                if (responseCode != CODE_200) {
-                    todayHolidayResponse.postValue(
-                        when (responseCode) {
-                            CODE_200 -> context.getString(R.string.today_is_holiday)
-                            CODE_204 -> context.getString(R.string.today_is_not_holiday)
-                            else -> context.getString(R.string.validation_failure)
-                        }
-                    )
+            _isLoading.value = true
+            getTodayHolidayUseCase(_searchValue.value.countryCode).let { responseCode ->
+                _holidayTitle.value = when (responseCode) {
+                    CODE_200 -> context.getString(R.string.today_is_holiday)
+                    CODE_204 -> context.getString(R.string.today_is_not_holiday)
+                    else -> context.getString(R.string.validation_failure)
                 }
+                _isLoading.value = false
             }
-            todayHolidayDisplayed.postValue(true)
         }
     }
 
@@ -140,10 +145,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getHolidayByYear(year: String) {
+    private fun getHolidayByYear(year: String) {
         viewModelScope.launch {
-            isGetHolidayByYearLoading.postValue(true)
-            val result = getHolidayUseCase(COLOMBIA_CODE, year)
+            // Show loading
+            val result = getHolidayUseCase(_searchValue.value.countryCode, year)
             if (result.isNotEmpty()) {
                 holidayByYearResponse.postValue(result)
                 val todayHolidayName = getTodayHolidayName(result)
@@ -153,7 +158,7 @@ class HomeViewModel @Inject constructor(
                     isTodayHoliday.postValue(true)
                 }
             }
-            isGetHolidayByYearLoading.postValue(false)
+            // Remove loading
         }
     }
 

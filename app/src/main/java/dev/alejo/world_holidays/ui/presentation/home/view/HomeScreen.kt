@@ -1,5 +1,6 @@
 package dev.alejo.world_holidays.ui.presentation.home.view
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,6 +27,7 @@ import dev.alejo.world_holidays.ui.composables.VerticalSpacer
 import dev.alejo.world_holidays.ui.presentation.home.view.components.AutoCompleteSearchBar
 import dev.alejo.world_holidays.ui.presentation.home.view.components.HomeBackground
 import dev.alejo.world_holidays.ui.presentation.home.view.components.HomeBottomSheet
+import dev.alejo.world_holidays.ui.presentation.home.view.components.LoadingComponent
 import dev.alejo.world_holidays.ui.presentation.home.viewmodel.HomeViewModel
 import dev.alejo.world_holidays.ui.theme.*
 
@@ -33,6 +35,8 @@ import dev.alejo.world_holidays.ui.theme.*
 @Composable
 fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = hiltViewModel()) {
     viewModel.onCreate(navHostController)
+
+    val isLoading by viewModel.isLoading.collectAsState()
     val holidayTitle by viewModel.holidayTitle.collectAsState()
     val holidayDescription by viewModel.holidayDescription.collectAsState()
     val searchValue by viewModel.searchValue.collectAsState()
@@ -43,6 +47,7 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
     val focusManager = LocalFocusManager.current
 
     HomeScreenContent(
+        isLoading = isLoading,
         holidayTitle = holidayTitle,
         holidayDescription = holidayDescription,
         navHostController = navHostController,
@@ -62,6 +67,7 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
 
 @Composable
 fun HomeScreenContent(
+    isLoading: Boolean,
     holidayTitle: String,
     holidayDescription: String,
     navHostController: NavHostController,
@@ -74,6 +80,7 @@ fun HomeScreenContent(
 ) {
     HomeBottomSheet {
         HomeContent(
+            isLoading = isLoading,
             holidayTitle = holidayTitle,
             holidayDescription = holidayDescription,
             navHostController = navHostController,
@@ -89,6 +96,7 @@ fun HomeScreenContent(
 
 @Composable
 fun HomeContent(
+    isLoading: Boolean,
     holidayTitle: String,
     holidayDescription: String,
     navHostController: NavHostController,
@@ -106,44 +114,52 @@ fun HomeContent(
     ) {
         HomeBackground()
 
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .padding(Medium)
-        ) {
-            AboutIconButton(navHostController)
-            VerticalSpacer(space = Medium)
-            AutoCompleteSearchBar(
-                modifier = Modifier.padding(horizontal = Small),
-                value = searchValue,
-                onValueChange = { onSearchChanged(it) },
-                onDismissRequest = { onDropdownDismissRequest() },
-                onItemSelected = { onItemSelected() },
-                dropDownExpanded = dropDownExpanded,
-                list = dropDownOptions
-            )
-        }
+        Crossfade(targetState = isLoading) { isLoading ->
+            if (isLoading) {
+                LoadingComponent()
+            } else {
+                Box(Modifier.fillMaxSize()) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(Medium)
+                    ) {
+                        AboutIconButton(navHostController)
+                        VerticalSpacer(space = Medium)
+                        AutoCompleteSearchBar(
+                            modifier = Modifier.padding(horizontal = Small),
+                            value = searchValue,
+                            onValueChange = { onSearchChanged(it) },
+                            onDismissRequest = { onDropdownDismissRequest() },
+                            onItemSelected = { onItemSelected() },
+                            dropDownExpanded = dropDownExpanded,
+                            list = dropDownOptions
+                        )
+                    }
 
-        Column(
-            Modifier
-                .align(Alignment.BottomCenter)
-                .padding(horizontal = Medium)
-                .padding(bottom = XMediumLarge),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = holidayTitle,
-                color = Yellow,
-                fontSize = 38.sp,
-                fontWeight = FontWeight.Bold
-            )
-            VerticalSpacer(space = Medium)
-            Text(
-                text = holidayDescription,
-                color = Color.White,
-                fontSize = 22.sp,
-                textAlign = TextAlign.Center
-            )
+                    Column(
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(horizontal = Medium)
+                            .padding(bottom = XMediumLarge),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = holidayTitle,
+                            color = Yellow,
+                            fontSize = 38.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        VerticalSpacer(space = Medium)
+                        Text(
+                            text = holidayDescription,
+                            color = Color.White,
+                            fontSize = 22.sp,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
         }
     }
 }
