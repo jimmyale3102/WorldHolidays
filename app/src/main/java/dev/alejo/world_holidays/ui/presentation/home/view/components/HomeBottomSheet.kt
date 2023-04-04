@@ -1,7 +1,10 @@
 package dev.alejo.world_holidays.ui.presentation.home.view.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -16,14 +19,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alejo.world_holidays.R
-import dev.alejo.world_holidays.ui.theme.BlueDark
-import dev.alejo.world_holidays.ui.theme.Medium
-import dev.alejo.world_holidays.ui.theme.Small
-import dev.alejo.world_holidays.ui.theme.XLarge
+import dev.alejo.world_holidays.data.model.HolidayModel
+import dev.alejo.world_holidays.ui.theme.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun HomeBottomSheet(bottomSheetContent: @Composable () -> Unit) {
+fun HomeBottomSheet(holidaysList: List<HolidayModel>, bottomSheetContent: @Composable () -> Unit) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
@@ -36,7 +37,7 @@ fun HomeBottomSheet(bottomSheetContent: @Composable () -> Unit) {
             topEnd = XLarge
         ),
         sheetContent = {
-            PeekContent()
+            PeekContent(holidaysList)
         },
         sheetBackgroundColor = BlueDark,
         drawerElevation = Small,
@@ -47,8 +48,8 @@ fun HomeBottomSheet(bottomSheetContent: @Composable () -> Unit) {
 }
 
 @Composable
-private fun PeekContent() {
-    var isListViewSelected by rememberSaveable { mutableStateOf(false) }
+private fun PeekContent(holidaysList: List<HolidayModel>) {
+    var isListViewSelected by rememberSaveable { mutableStateOf(true) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -67,18 +68,34 @@ private fun PeekContent() {
             fontSize = 16.sp,
             color = Color.White
         )
-        ViewToggle(
-            modifier = Modifier.align(Alignment.End),
-            isListViewSelected
-        ) { listViewSelected ->
-            isListViewSelected = listViewSelected
-        }
 
-        if (isListViewSelected) {
-            // Show List view
-        } else {
-            // show Calendar view
-            HolidaysCalendar()
+        if (holidaysList.isNotEmpty()) {
+            ViewToggle(
+                modifier = Modifier.align(Alignment.End),
+                isListViewSelected
+            ) { listViewSelected ->
+                isListViewSelected = listViewSelected
+            }
+            if (isListViewSelected) {
+                Column(
+                    Modifier.scrollable(
+                        rememberScrollState(),
+                        orientation = Orientation.Vertical
+                    )
+                ) {
+                    YearHolidaysList(holidaysList = holidaysList)
+                }
+            } else {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .scrollable(rememberScrollState(), orientation = Orientation.Vertical),
+                    verticalArrangement = Arrangement.spacedBy(Medium),
+                ) {
+                    HolidaysCalendar()
+                    MonthHolidaysList(holidaysList = holidaysList)
+                }
+            }
         }
 
     }

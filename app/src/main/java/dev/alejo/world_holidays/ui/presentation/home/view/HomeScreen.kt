@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import dev.alejo.world_holidays.core.uitls.UiText
 import dev.alejo.world_holidays.data.model.Country
+import dev.alejo.world_holidays.data.model.HolidayModel
 import dev.alejo.world_holidays.ui.composables.AboutIconButton
 import dev.alejo.world_holidays.ui.composables.VerticalSpacer
 import dev.alejo.world_holidays.ui.presentation.home.view.components.AutoCompleteSearchBar
@@ -38,10 +40,11 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
 
     val isLoading by viewModel.isLoading.collectAsState()
     val holidayTitle by viewModel.holidayTitle.collectAsState()
-    val holidayDescription by viewModel.holidayDescription.collectAsState()
+    val nextHoliday by viewModel.nextHoliday.collectAsState()
     val searchValue by viewModel.searchValue.collectAsState()
     val dropdownExpanded by viewModel.dropdownExpanded.collectAsState()
     val dropdownOptions by viewModel.dropdownOptions.collectAsState()
+    val holidaysList by viewModel.holidaysByYear.collectAsState()
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -49,9 +52,10 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
     HomeScreenContent(
         isLoading = isLoading,
         holidayTitle = holidayTitle,
-        holidayDescription = holidayDescription,
+        nextHoliday = nextHoliday,
         navHostController = navHostController,
         searchValue = searchValue,
+        holidaysList = holidaysList,
         dropDownExpanded = dropdownExpanded,
         dropDownOptions = dropdownOptions,
         onDropdownDismissRequest = { viewModel.onDropdownDismissRequest() },
@@ -68,21 +72,22 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
 @Composable
 fun HomeScreenContent(
     isLoading: Boolean,
-    holidayTitle: String,
-    holidayDescription: String,
+    holidayTitle: UiText,
+    nextHoliday: UiText,
     navHostController: NavHostController,
     searchValue: Country,
+    holidaysList: List<HolidayModel>,
     dropDownExpanded: Boolean,
     dropDownOptions: List<Country>,
     onDropdownDismissRequest: () -> Unit,
     onItemSelected: () -> Unit,
     onSearchChanged: (String) -> Unit
 ) {
-    HomeBottomSheet {
+    HomeBottomSheet(holidaysList) {
         HomeContent(
             isLoading = isLoading,
             holidayTitle = holidayTitle,
-            holidayDescription = holidayDescription,
+            nextHoliday = nextHoliday,
             navHostController = navHostController,
             searchValue = searchValue,
             dropDownExpanded = dropDownExpanded,
@@ -97,8 +102,8 @@ fun HomeScreenContent(
 @Composable
 fun HomeContent(
     isLoading: Boolean,
-    holidayTitle: String,
-    holidayDescription: String,
+    holidayTitle: UiText,
+    nextHoliday: UiText,
     navHostController: NavHostController,
     searchValue: Country,
     dropDownExpanded: Boolean,
@@ -145,14 +150,15 @@ fun HomeContent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = holidayTitle,
+                            text = holidayTitle.asString(),
                             color = Yellow,
                             fontSize = 38.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center
                         )
                         VerticalSpacer(space = Medium)
                         Text(
-                            text = holidayDescription,
+                            text = nextHoliday.asString(),
                             color = Color.White,
                             fontSize = 22.sp,
                             textAlign = TextAlign.Center

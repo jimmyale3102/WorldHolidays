@@ -1,7 +1,5 @@
 package dev.alejo.world_holidays.ui.presentation.home.viewmodel
 
-import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -9,8 +7,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.alejo.world_holidays.R
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_200
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_204
-import dev.alejo.world_holidays.core.Constants.Companion.COLOMBIA_CODE
-import dev.alejo.world_holidays.core.DateUtils
+import dev.alejo.world_holidays.core.Constants.Companion.CODE_400
+import dev.alejo.world_holidays.core.uitls.DateUtils
+import dev.alejo.world_holidays.core.uitls.UiText
+import dev.alejo.world_holidays.core.uitls.UiText.DynamicString
+import dev.alejo.world_holidays.core.uitls.UiText.StringResource
 import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.data.model.HolidayModel
 import dev.alejo.world_holidays.domain.GetCountriesUseCase
@@ -37,11 +38,8 @@ class HomeViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _holidayTitle = MutableStateFlow("New Year's Day")
-    val holidayTitle: StateFlow<String> = _holidayTitle
-
-    private val _holidayDescription = MutableStateFlow("New Year's Day is the first day of the year, or January 1., in the Gregorian calendar.")
-    val holidayDescription: StateFlow<String> = _holidayDescription
+    private val _holidayTitle: MutableStateFlow<UiText> = MutableStateFlow(DynamicString(""))
+    val holidayTitle: StateFlow<UiText> = _holidayTitle
 
     private val _searchValue = MutableStateFlow(Country(name = "", countryCode = ""))
     val searchValue: StateFlow<Country> = _searchValue
@@ -51,6 +49,12 @@ class HomeViewModel @Inject constructor(
 
     private val _dropdownOptions = MutableStateFlow(listOf<Country>())
     val dropdownOptions: StateFlow<List<Country>> = _dropdownOptions
+
+    private val _holidaysByYear = MutableStateFlow(emptyList<HolidayModel>())
+    val holidaysByYear: StateFlow<List<HolidayModel>> = _holidaysByYear
+
+    private val _nextHoliday: MutableStateFlow<UiText> = MutableStateFlow(DynamicString(""))
+    val nextHoliday: StateFlow<UiText> = _nextHoliday
 
     init {
         getCountries()
@@ -101,73 +105,64 @@ class HomeViewModel @Inject constructor(
     private fun validateSearchToGetData() {
         if (_searchValue.value.countryCode.isNotEmpty()) {
             getHolidayByYear(Calendar.getInstance().get(Calendar.YEAR).toString())
+            getNextHolidayByYear()
+            getTodayHoliday()
         }
     }
 
-
-    val holidayByYearResponse = MutableLiveData<List<HolidayModel>>()
-    val nextPublicHolidayResponse = MutableLiveData<HolidayModel>()
-    val todayHolidayResponse = MutableLiveData<String>()
-    private val todayHolidayDisplayed = MutableLiveData<Boolean>()
-    val isTodayHolidayLoading = MutableLiveData<Boolean>()
-    val isGetHolidayByYearLoading = MutableLiveData<Boolean>()
-    val isTodayHoliday = MutableLiveData<Boolean>()
-
-    fun onCreated(context: Context) {
-        isTodayHoliday.postValue(false)
-        todayHolidayDisplayed.postValue(false)
-        getHolidayByYear("2022")
-        getNextHolidayByYear()
-        getTodayHoliday(context)
-    }
-
-    private fun getTodayHoliday(context: Context) {
+    private fun getTodayHoliday() {
         viewModelScope.launch {
             _isLoading.value = true
             getTodayHolidayUseCase(_searchValue.value.countryCode).let { responseCode ->
-                _holidayTitle.value = when (responseCode) {
-                    CODE_200 -> context.getString(R.string.today_is_holiday)
-                    CODE_204 -> context.getString(R.string.today_is_not_holiday)
-                    else -> context.getString(R.string.validation_failure)
+                if (responseCode != CODE_200) {
+                    _holidayTitle.value = when (responseCode) {
+                        CODE_204 -> StringResource(resId = R.string.today_is_not_holiday)
+                        CODE_400 -> StringResource(resId = R.string.validation_failure)
+                        else -> StringResource(resId = R.string.country_code_unknown)
+                    }
                 }
                 _isLoading.value = false
             }
         }
     }
 
-    fun getNextHolidayByYear() {
+    private fun getNextHolidayByYear() {
         viewModelScope.launch {
-            val result = getNextPublicHolidayUseCase(COLOMBIA_CODE)
-            if (result.isNotEmpty())
-                nextPublicHolidayResponse.postValue(
+            val result = getNextPublicHolidayUseCase(_searchValue.value.countryCode)
+            if (result.isNotEmpty()) {
+                val nextHoliday =
                     if (getTodayHolidayName(result).isEmpty()) result[0] else result[1]
+                _nextHoliday.value = DynamicString(
+                    "Upcoming holiday is on %s and it\'s for %s".format(
+                        DateUtils.getNextHolidayFormatted(nextHoliday.date),
+                        nextHoliday.name
+                    )
                 )
+            }
         }
     }
 
     private fun getHolidayByYear(year: String) {
         viewModelScope.launch {
-            // Show loading
+            _isLoading.value = true
             val result = getHolidayUseCase(_searchValue.value.countryCode, year)
             if (result.isNotEmpty()) {
-                holidayByYearResponse.postValue(result)
+                _holidaysByYear.value = result
                 val todayHolidayName = getTodayHolidayName(result)
-                if (todayHolidayDisplayed.value == false && todayHolidayName.isNotEmpty()) {
-                    todayHolidayDisplayed.postValue(true)
-                    todayHolidayResponse.postValue(todayHolidayName)
-                    isTodayHoliday.postValue(true)
+                if (todayHolidayName.isNotEmpty()) {
+                    _holidayTitle.value = DynamicString(value = todayHolidayName)
                 }
             }
-            // Remove loading
+            _isLoading.value = false
         }
     }
 
     private fun getTodayHolidayName(allHolidays: List<HolidayModel>): String {
         val currentDate = Calendar.getInstance()
-        val holiday =
-            allHolidays.filter { it.date == DateUtils.getStringDateFromDate(currentDate.time) }
+        val holiday = allHolidays
+            .filter { it.date == DateUtils.getStringDateFromDate(currentDate.time) }
         if (holiday.isNotEmpty())
-            return if (Locale.getDefault().language == "en") holiday[0].name else holiday[0].localName
+            return holiday[0].name
         return ""
     }
 }
