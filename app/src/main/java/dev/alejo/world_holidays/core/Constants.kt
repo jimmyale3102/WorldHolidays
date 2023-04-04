@@ -6,6 +6,7 @@ class Constants {
         const val COLOMBIA_CODE = "CO"
         const val CODE_200 = 200
         const val CODE_204 = 204
+        const val CODE_400 = 400
         const val PICTURES_URL = "https://www.pexels.com/"
         const val CHANNEL_ID = "world_holidays_notifications_channel"
         const val NOTIFICATION_TITLE = "¡It's holiday!"

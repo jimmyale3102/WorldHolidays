@@ -1,4 +1,4 @@
-package dev.alejo.world_holidays.core
+package dev.alejo.world_holidays.core.uitls
 
 import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
@@ -9,12 +9,14 @@ object DateUtils {
     private val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
     private val dateFormat = SimpleDateFormat("EEE dd")
     private val nextHolidayDateFormat = SimpleDateFormat("EEE, MMM dd")
+    private val monthDateFormat = SimpleDateFormat("MMM")
 
     fun getStringDateFromDate(date: Date): String = dateFormatter.format(date)
-    private fun getDateFromString(dateString: String): Date? = dateFormatter.parse(dateString)
+    fun getDateFromString(dateString: String): Date? = dateFormatter.parse(dateString)
     fun getDayFromDate(date: Date): String = dateFormat.format(date).split(" ")[1]
     fun getDayNameFromDate(date: Date): String = dateFormat.format(date).split(" ")[0]
     fun getMonthNumber(dateString: String): Int = dateString.split("-")[1].toInt()
+    fun getMonthName(date: Date): String = monthDateFormat.format(date)
     fun getMonthFromDate(date: Date) = dateFormatter.format(date).split("-")[1].toInt()
     fun getYearFromDate(date: Date) = dateFormatter.format(date).split("-")[0].toInt()
     fun getNextHolidayFormatted(dateString: String): String =
