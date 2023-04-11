@@ -9,28 +9,46 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.himanshoe.kalendar.Kalendar
-import com.himanshoe.kalendar.model.KalendarEvent
-import com.himanshoe.kalendar.model.KalendarType
+import dev.alejo.world_holidays.core.kalendar.Kalendar
+import dev.alejo.world_holidays.core.kalendar.model.KalendarEvent
+import dev.alejo.world_holidays.core.kalendar.model.KalendarType
+import dev.alejo.world_holidays.core.uitls.DateUtils
+import dev.alejo.world_holidays.data.model.HolidayModel
 import dev.alejo.world_holidays.ui.theme.Medium
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.*
 
 @Composable
-fun HolidaysCalendar() {
-    val events = listOf(
+fun HolidaysCalendar(holidaysByMonth: List<HolidayModel>, onPageChanged: (Int, Month) -> Unit) {
+    val events = holidaysByMonth.map { holidayItem ->
         KalendarEvent(
-            date = LocalDate(2023, 3, 30),
-            eventName = "New year's day",
-            eventDescription = "This is the first day of the year"
+            date = DateUtils.getLocalDateFromString(holidayItem.date), eventName = holidayItem.name
         )
-    )
+    }
     Card(shape = RoundedCornerShape(Medium)) {
         Kalendar(
-            modifier = Modifier.border(border = BorderStroke(0.dp, Color.White), shape = RoundedCornerShape(Medium)),
+            modifier = Modifier.border(
+                border = BorderStroke(0.dp, Color.White),
+                shape = RoundedCornerShape(Medium)
+            ),
             kalendarType = KalendarType.Firey,
             kalendarEvents = events,
             onCurrentDayClick = { day, _ ->
                 Log.e("Day->", day.localDate.dayOfMonth.toString())
-            })
+            },
+            onPreviousClick = { currentYear, currentMonth ->
+                Log.e(
+                    "Year and Month->",
+                    "$currentYear ${currentMonth.name}"
+                )
+                onPageChanged(currentYear, currentMonth)
+            },
+            onNextClick = { currentYear, currentMonth ->
+                Log.e(
+                    "Year and Month->",
+                    "$currentYear ${currentMonth.name}"
+                )
+                onPageChanged(currentYear, currentMonth)
+            }
+        )
     }
 }
