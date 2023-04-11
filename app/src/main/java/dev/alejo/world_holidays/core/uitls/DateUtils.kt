@@ -1,6 +1,7 @@
 package dev.alejo.world_holidays.core.uitls
 
 import android.annotation.SuppressLint
+import kotlinx.datetime.LocalDate
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -13,9 +14,14 @@ object DateUtils {
 
     fun getStringDateFromDate(date: Date): String = dateFormatter.format(date)
     fun getDateFromString(dateString: String): Date? = dateFormatter.parse(dateString)
+    fun getLocalDateFromString(dateString: String): LocalDate {
+        val dateSplit = dateString.split("-")
+        return LocalDate(dateSplit[0].toInt(), dateSplit[1].toInt(), dateSplit[2].toInt())
+    }
     fun getDayFromDate(date: Date): String = dateFormat.format(date).split(" ")[1]
     fun getDayNameFromDate(date: Date): String = dateFormat.format(date).split(" ")[0]
     fun getMonthNumber(dateString: String): Int = dateString.split("-")[1].toInt()
+    fun getYearNumber(dateString: String): Int = dateString.split("-")[0].toInt()
     fun getMonthName(date: Date): String = monthDateFormat.format(date)
     fun getMonthFromDate(date: Date) = dateFormatter.format(date).split("-")[1].toInt()
     fun getYearFromDate(date: Date) = dateFormatter.format(date).split("-")[0].toInt()
