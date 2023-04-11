@@ -19,7 +19,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.WorldHolidays">
+            android:theme="@style/Theme.SplashStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
