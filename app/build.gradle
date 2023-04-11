@@ -69,6 +69,8 @@ dependencies {
     implementation "com.google.accompanist:accompanist-navigation-animation:$animated_navigation_version"
     implementation "io.coil-kt:coil-compose:$coil_version"
     implementation("io.coil-kt:coil-svg:$coil_version")
+    // A local fork is used instead of the library in order to wait for the update which is to
+    // get the onPrevious and onNext lambda
     implementation("com.himanshoe:kalendar:$kalendar_version")
     implementation "com.airbnb.android:lottie-compose:$lottie_version"
 
