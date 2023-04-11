@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.alejo.world_holidays.core.navigation.Navigation
@@ -20,8 +21,10 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnrememberedMutableState")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val splashScreen = installSplashScreen()
         setContent {
             WorldHolidaysTheme {
+                splashScreen.setKeepOnScreenCondition { false }
                 Navigation(
                     navHostController = rememberAnimatedNavController(),
                     startDestination = Screen.Home.route
