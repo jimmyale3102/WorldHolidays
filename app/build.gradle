@@ -73,6 +73,7 @@ dependencies {
     // get the onPrevious and onNext lambda
     implementation("com.himanshoe:kalendar:$kalendar_version")
     implementation "com.airbnb.android:lottie-compose:$lottie_version"
+    implementation "androidx.core:core-splashscreen:$splash_version"
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:30.1.0')
