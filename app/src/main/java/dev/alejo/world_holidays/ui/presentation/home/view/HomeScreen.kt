@@ -63,7 +63,8 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
             viewModel.onItemSelected()
             keyboardController?.hide()
             focusManager.clearFocus()
-        }
+        },
+        onYearChanged = { year -> viewModel.getHolidayByYear(year.toString()) }
     ) { inputTyped ->
         viewModel.onSearchChanged(inputTyped)
     }
@@ -81,9 +82,13 @@ fun HomeScreenContent(
     dropDownOptions: List<Country>,
     onDropdownDismissRequest: () -> Unit,
     onItemSelected: () -> Unit,
+    onYearChanged: (Int) -> Unit,
     onSearchChanged: (String) -> Unit
 ) {
-    HomeBottomSheet(holidaysList) {
+    HomeBottomSheet(
+        isLoading = isLoading,
+        holidaysList = holidaysList,
+        onYearChanged = { year -> onYearChanged(year) }) {
         HomeContent(
             isLoading = isLoading,
             holidayTitle = holidayTitle,

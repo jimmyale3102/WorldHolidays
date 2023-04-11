@@ -142,7 +142,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getHolidayByYear(year: String) {
+    fun getHolidayByYear(year: String) {
         viewModelScope.launch {
             _isLoading.value = true
             val result = getHolidayUseCase(_searchValue.value.countryCode, year)
