@@ -18,7 +18,7 @@ import dev.alejo.world_holidays.R
 import dev.alejo.world_holidays.core.navigation.Screen
 
 @Composable
-fun AboutIconButton(navHostController: NavHostController) {
+fun AboutIconButton(onAboutClick: () -> Unit) {
     Box(
         Modifier.fillMaxWidth()
     ) {
@@ -26,7 +26,7 @@ fun AboutIconButton(navHostController: NavHostController) {
             modifier = Modifier
                 .align(alignment = Alignment.CenterEnd)
                 .then(Modifier.size(24.dp)),
-            onClick = { navigateToAboutScreen(navHostController) },
+            onClick = { onAboutClick() },
         ) {
             Icon(
                 Icons.Default.Info,
@@ -35,8 +35,4 @@ fun AboutIconButton(navHostController: NavHostController) {
             )
         }
     }
-}
-
-fun navigateToAboutScreen(navHostController: NavHostController) {
-    navHostController.navigate(Screen.Home.route)
 }
