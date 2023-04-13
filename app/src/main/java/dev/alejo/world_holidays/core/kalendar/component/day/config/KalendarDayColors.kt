@@ -16,6 +16,9 @@
 package dev.alejo.world_holidays.core.kalendar.component.day.config
 
 import androidx.compose.ui.graphics.Color
+import dev.alejo.world_holidays.ui.theme.BlueDark
+import dev.alejo.world_holidays.ui.theme.LightWhite
+import dev.alejo.world_holidays.ui.theme.WhiteCake
 
 data class KalendarDayColors(
     val textColor: Color, // Default Text Color
@@ -24,5 +27,5 @@ data class KalendarDayColors(
 
 object KalendarDayDefaultColors {
 
-    fun defaultColors() = KalendarDayColors(Color.Black, Color.White)
+    fun defaultColors() = KalendarDayColors(WhiteCake, WhiteCake)
 }

@@ -22,8 +22,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import dev.alejo.world_holidays.ui.theme.Yellow
 
 @Composable
 fun KalendarIconButton(
@@ -40,7 +40,7 @@ fun KalendarIconButton(
     ) {
         Icon(
             modifier = Modifier,
-            tint = Color(0xFF413D4B),
+            tint = Yellow,
             imageVector = imageVector,
             contentDescription = contentDescription
         )

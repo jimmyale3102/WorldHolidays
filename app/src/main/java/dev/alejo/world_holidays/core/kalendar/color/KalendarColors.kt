@@ -17,6 +17,9 @@ package dev.alejo.world_holidays.core.kalendar.color
 
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
+import dev.alejo.world_holidays.ui.theme.BlueKing
+import dev.alejo.world_holidays.ui.theme.BlueLight
+import dev.alejo.world_holidays.ui.theme.Yellow
 
 internal object KalendarColors {
 
@@ -34,6 +37,23 @@ internal object KalendarColors {
 
     @Stable
     private val backgroundColor = listOf(
+        BlueLight,
+        BlueLight,
+        BlueLight,
+        BlueLight,
+        BlueLight,
+        BlueLight,
+        BlueLight,
+        BlueLight,
+        BlueLight,
+        BlueLight,
+        BlueLight,
+        BlueLight
+    )
+
+    /*
+    @Stable
+    private val backgroundColor = listOf(
         Color(0xffF7CFD3),
         Color(0xffEFBDCF),
         Color(0xffDBBFE4),
@@ -47,7 +67,24 @@ internal object KalendarColors {
         Color(0xffDEEBCB),
         Color(0xffF1F4C8),
     )
+*/
+    @Stable
+    private val kalendarBackgroundColor = listOf(
+        BlueKing,
+        BlueKing,
+        BlueKing,
+        BlueKing,
+        BlueKing,
+        BlueKing,
+        BlueKing,
+        BlueKing,
+        BlueKing,
+        BlueKing,
+        BlueKing,
+        BlueKing
+    )
 
+    /*
     @Stable
     private val kalendarBackgroundColor = listOf(
         Color.White,
@@ -78,6 +115,23 @@ internal object KalendarColors {
         Color(0xFF9DB39A),
         Color(0xFFADBA9A),
         Color(0xFFBEC196),
+    )
+    */
+
+    @Stable
+    private val headerColors = listOf(
+        Yellow,
+        Yellow,
+        Yellow,
+        Yellow,
+        Yellow,
+        Yellow,
+        Yellow,
+        Yellow,
+        Yellow,
+        Yellow,
+        Yellow,
+        Yellow
     )
 }
 
