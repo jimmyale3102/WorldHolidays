@@ -8,6 +8,7 @@ import dev.alejo.world_holidays.R
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_200
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_204
 import dev.alejo.world_holidays.core.Constants.Companion.CODE_400
+import dev.alejo.world_holidays.core.navigation.Screen
 import dev.alejo.world_holidays.core.uitls.DateUtils
 import dev.alejo.world_holidays.core.uitls.UiText
 import dev.alejo.world_holidays.core.uitls.UiText.DynamicString
@@ -164,5 +165,9 @@ class HomeViewModel @Inject constructor(
         if (holiday.isNotEmpty())
             return holiday[0].name
         return ""
+    }
+
+    fun navigateToAboutScreen() {
+        navHostController.navigate(Screen.About.route)
     }
 }

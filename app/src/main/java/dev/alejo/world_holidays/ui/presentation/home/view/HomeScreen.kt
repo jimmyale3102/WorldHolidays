@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import dev.alejo.world_holidays.R
 import dev.alejo.world_holidays.core.uitls.UiText
 import dev.alejo.world_holidays.data.model.Country
 import dev.alejo.world_holidays.data.model.HolidayModel
@@ -55,7 +53,7 @@ fun HomeScreen(navHostController: NavHostController, viewModel: HomeViewModel = 
         isLoading = isLoading,
         holidayTitle = holidayTitle,
         nextHoliday = nextHoliday,
-        navHostController = navHostController,
+        onAboutClick = { viewModel.navigateToAboutScreen() },
         searchValue = searchValue,
         holidaysList = holidaysList,
         dropDownExpanded = dropdownExpanded,
@@ -77,7 +75,7 @@ fun HomeScreenContent(
     isLoading: Boolean,
     holidayTitle: UiText,
     nextHoliday: UiText,
-    navHostController: NavHostController,
+    onAboutClick: () -> Unit,
     searchValue: Country,
     holidaysList: List<HolidayModel>,
     dropDownExpanded: Boolean,
@@ -95,7 +93,7 @@ fun HomeScreenContent(
             isLoading = isLoading,
             holidayTitle = holidayTitle,
             nextHoliday = nextHoliday,
-            navHostController = navHostController,
+            onAboutClick = onAboutClick,
             searchValue = searchValue,
             dropDownExpanded = dropDownExpanded,
             dropDownOptions = dropDownOptions,
@@ -111,7 +109,7 @@ fun HomeContent(
     isLoading: Boolean,
     holidayTitle: UiText,
     nextHoliday: UiText,
-    navHostController: NavHostController,
+    onAboutClick: () -> Unit,
     searchValue: Country,
     dropDownExpanded: Boolean,
     dropDownOptions: List<Country>,
@@ -136,7 +134,7 @@ fun HomeContent(
                             .fillMaxWidth()
                             .padding(Medium)
                     ) {
-                        AboutIconButton(navHostController)
+                        AboutIconButton(onAboutClick = { onAboutClick() })
                         VerticalSpacer(space = Medium)
                         AutoCompleteSearchBar(
                             modifier = Modifier.padding(horizontal = Small),
