@@ -12,6 +12,8 @@ class Constants {
         const val NOTIFICATION_TITLE = "¡It's holiday!"
         const val MESSAGE_EXTRA = "messageExtra"
         const val NOTIFICATION_ID_EXTRA = "notificationIdExtra"
+        const val JIMMY_URL = "https://twitter.com/jimmyale3201"
+        const val PIXABAY_URL = "https://pixabay.com/"
         const val COUNTRY_FLAG_IMG_URL = "https://date.nager.at/images/circle-flags/flags/%s.svg"
     }
 }
