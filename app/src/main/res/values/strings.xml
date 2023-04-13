@@ -17,4 +17,14 @@
     <string name="country_search_content_desc">Country search icon</string>
     <string name="list_view_icon_content_desc">List view icon</string>
     <string name="calendar_view_icon_content_desc">Calendar view icon</string>
+    <string name="about_app">
+        Is a simple app which shows you all holidays of 110 countries
+        around the world. This is the very first version and there are some features ready to
+        be added. Also if you\'d like me to add some feature to this app just let me know it.
+    </string>
+    <string name="about_app_made_by">Made with</string>
+    <string name="by">by</string>
+    <string name="Jimmy">Jimmy.</string>
+    <string name="pictures_are_from">Pictures are from \ </string>
+    <string name="pixabay">Pixabay.</string>
 </resources>
