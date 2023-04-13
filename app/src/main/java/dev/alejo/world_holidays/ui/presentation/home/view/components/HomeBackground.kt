@@ -26,7 +26,7 @@ fun HomeBackground() {
                         BlueLight
                     ),
                     startY = 0F,
-                    endY = 600F
+                    endY = 500F
                 )
             )
     ) {
