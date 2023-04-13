@@ -13,9 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import dev.alejo.world_holidays.R
-import dev.alejo.world_holidays.core.navigation.Screen
 
 @Composable
 fun AboutIconButton(onAboutClick: () -> Unit) {
