@@ -50,6 +50,6 @@ private fun MonthName(monthName: String) {
         fontSize = 30.sp,
         color = Yellow,
         fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(top = Medium, bottom = XSmall)
+        modifier = Modifier.padding(top = Medium)
     )
 }

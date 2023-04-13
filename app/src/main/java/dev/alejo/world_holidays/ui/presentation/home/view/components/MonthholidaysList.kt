@@ -3,6 +3,7 @@ package dev.alejo.world_holidays.ui.presentation.home.view.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,12 +24,20 @@ fun MonthHolidaysList(
     holidaysList: List<HolidayModel>
 ) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(Medium)) {
-        Text(
-            text = stringResource(id = listTitle),
-            fontSize = 30.sp,
-            color = Yellow,
-            fontWeight = FontWeight.Bold
-        )
+        Row {
+            Text(
+                text = stringResource(id = listTitle),
+                fontSize = 30.sp,
+                color = Yellow,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = " - ${holidaysList.size.toString()}",
+                fontSize = 30.sp,
+                color = Yellow,
+                fontWeight = FontWeight.Bold
+            )
+        }
         LazyColumn(verticalArrangement = Arrangement.spacedBy(Medium)) {
             items(holidaysList) { holiday ->
                 HolidayItem(holidayItem = holiday)
