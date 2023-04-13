@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alejo.world_holidays.R
@@ -53,6 +54,8 @@ fun HomeBottomSheet(
                     bottomSheetState = BottomSheetValue.Expanded
                     onYearChanged(year)
                 }
+            } else {
+                EmptyPeekContent()
             }
         },
         sheetBackgroundColor = BlueDark,
@@ -60,6 +63,19 @@ fun HomeBottomSheet(
         sheetPeekHeight = XLarge
     ) {
         bottomSheetContent()
+    }
+}
+
+@Composable
+private fun EmptyPeekContent() {
+    Box(Modifier.fillMaxWidth().padding(Medium)) {
+        Text(
+            modifier = Modifier.align(Alignment.Center),
+            text = stringResource(id = R.string.type_a_country_to_start),
+            fontSize = 16.sp,
+            color = Color.White,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -82,6 +98,7 @@ private fun PeekContent(
             }
             Column(
                 modifier = Modifier
+                    .fillMaxHeight(0.88f)
                     .fillMaxWidth()
                     .padding(Medium),
                 verticalArrangement = Arrangement.spacedBy(Medium),
