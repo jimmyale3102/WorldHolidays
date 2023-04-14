@@ -41,13 +41,9 @@ import dev.alejo.world_holidays.core.kalendar.component.text.config.KalendarText
 import dev.alejo.world_holidays.core.kalendar.model.KalendarDay
 import dev.alejo.world_holidays.core.kalendar.model.KalendarEvent
 import dev.alejo.world_holidays.core.kalendar.model.toKalendarDay
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.Month
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDate
-import kotlinx.datetime.todayIn
+import dev.alejo.world_holidays.ui.theme.BlueLight
+import dev.alejo.world_holidays.ui.theme.Yellow
+import kotlinx.datetime.*
 
 val WeekDays = listOf("M", "T", "W", "T", "F", "S", "S")
 
@@ -143,8 +139,10 @@ fun KalendarFirey(
                             },
                             selectedKalendarDay = selectedKalendarDate.value,
                             kalendarDayColors = kalendarDayColors,
-                            dotColor = kalendarThemeColors[currentMonth.value.minus(1)].headerTextColor,
-                            dayBackgroundColor = kalendarThemeColors[currentMonth.value.minus(1)].dayBackgroundColor,
+                            //dotColor = kalendarThemeColors[currentMonth.value.minus(1)].headerTextColor,
+                            //dayBackgroundColor = kalendarThemeColors[currentMonth.value.minus(1)].dayBackgroundColor,
+                            dotColor = Yellow,
+                            dayBackgroundColor = BlueLight,
                         )
                     }
                 }
@@ -246,8 +244,10 @@ fun KalendarFirey(
                             },
                             selectedKalendarDay = selectedKalendarDate.value,
                             kalendarDayColors = kalendarDayColors,
-                            dotColor = kalendarThemeColor.headerTextColor,
-                            dayBackgroundColor = kalendarThemeColor.dayBackgroundColor,
+                            //dotColor = kalendarThemeColor.headerTextColor,
+                            //dayBackgroundColor = kalendarThemeColor.dayBackgroundColor,
+                            dotColor = Yellow,
+                            dayBackgroundColor = BlueLight,
                         )
                     }
                 }

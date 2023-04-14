@@ -118,12 +118,12 @@ fun KalendarDots(
 ) {
     Box(
         modifier = modifier
-            .padding(horizontal = 1.dp)
+            .padding(horizontal = 4.dp)
             .clip(shape = CircleShape)
             .background(
-                color = color.copy(alpha = index.plus(1) * 0.3F)
+                color = color.copy(alpha = index.plus(1) * 0.8F)
             )
-            .size(size = size.div(12))
+            .size(size = size.div(6))
     )
 }
 
@@ -166,9 +166,11 @@ private fun getTextColor(
 @Preview
 @Composable
 private fun KalendarDayPreview() {
-//    KalendarDay(
-//        kalendarDay = KalendarDay(localDate = Clock.System.todayIn(TimeZone.currentSystemDefault())),
-//        kalendarDayConfig = KalendarDayDefaults.kalendarDayConfig(),
-//        selectedKalendarDate = mutableStateOf<LocalDate>()
-//    )
+    /*
+    KalendarDay(
+        kalendarDay = KalendarDay(localDate = Clock.System.todayIn(TimeZone.currentSystemDefault())),
+        kalendarDayConfig = KalendarDayDefaults.kalendarDayConfig(),
+        selectedKalendarDate = mutableStateOf<LocalDate>()
+    )
+    */
 }
