@@ -124,7 +124,7 @@ fun HomeContent(
     ) {
         HomeBackground()
 
-        Crossfade(targetState = isLoading) { isLoading ->
+        Crossfade(targetState = isLoading, label = "") { isLoading ->
             if (isLoading) {
                 LoadingComponent()
             } else {
