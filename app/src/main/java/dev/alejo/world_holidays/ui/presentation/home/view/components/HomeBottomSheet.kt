@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import dev.alejo.world_holidays.R
 import dev.alejo.world_holidays.core.uitls.DateUtils
 import dev.alejo.world_holidays.data.model.HolidayModel
 import dev.alejo.world_holidays.ui.theme.*
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
@@ -36,13 +38,13 @@ fun HomeBottomSheet(
     onYearChanged: (Int) -> Unit,
     bottomSheetContent: @Composable () -> Unit
 ) {
-    var bottomSheetState by rememberSaveable { mutableStateOf(BottomSheetValue.Collapsed) }
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(bottomSheetState)
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     )
+    val coroutineScope = rememberCoroutineScope()
 
     BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
+        scaffoldState = scaffoldState,
         sheetElevation = 8.dp,
         sheetShape = RoundedCornerShape(
             topStart = XLarge,
@@ -51,8 +53,10 @@ fun HomeBottomSheet(
         sheetContent = {
             if (holidaysList.isNotEmpty()) {
                 PeekContent(isLoading, holidaysList) { year ->
-                    bottomSheetState = BottomSheetValue.Expanded
-                    onYearChanged(year)
+                    coroutineScope.launch {
+                        scaffoldState.bottomSheetState.expand()
+                        onYearChanged(year)
+                    }
                 }
             } else {
                 EmptyPeekContent()
@@ -68,7 +72,12 @@ fun HomeBottomSheet(
 
 @Composable
 private fun EmptyPeekContent() {
-    Box(Modifier.fillMaxWidth().padding(Medium)) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(XLarge)
+            .padding(Medium)
+    ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = stringResource(id = R.string.type_a_country_to_start),
@@ -142,7 +151,11 @@ private fun PeekContent(
                                 onYearChanged(currentYear)
                             } else {
                                 holidaysByMonth =
-                                    getHolidaysByMonth(holidaysList, currentYear, currentMonth.value)
+                                    getHolidaysByMonth(
+                                        holidaysList,
+                                        currentYear,
+                                        currentMonth.value
+                                    )
                             }
                         }
                         MonthHolidaysList(holidaysList = holidaysByMonth)
@@ -159,5 +172,5 @@ private fun getHolidaysByMonth(
     currentMonth: Int
 ) = holidaysList.filter { holidayItem ->
     DateUtils.getYearNumber(holidayItem.date) == currentYear
-        && DateUtils.getMonthNumber(holidayItem.date) == currentMonth
+            && DateUtils.getMonthNumber(holidayItem.date) == currentMonth
 }
